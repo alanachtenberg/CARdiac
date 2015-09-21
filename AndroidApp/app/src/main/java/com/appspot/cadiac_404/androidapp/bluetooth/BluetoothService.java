@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.Set;
 
 public class BluetoothService extends Service {
+
     private SharedPreferences mSP;
     private BluetoothAdapter mBluetoothAdapter;
   //private BroadCastReciever mReciever defined later
@@ -117,7 +118,7 @@ public class BluetoothService extends Service {
     }
 
     private void retrievePreferences(){
-        targetDeviceName=mSP.getString("bt_device_name","Udoo");
+        targetDeviceName=mSP.getString("bt_device_name","UDOO");
     }
 
 
