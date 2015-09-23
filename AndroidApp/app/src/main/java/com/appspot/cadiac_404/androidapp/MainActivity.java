@@ -5,6 +5,8 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 
+import com.appspot.cadiac_404.androidapp.preference.SettingsFragment;
+
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks
@@ -46,6 +48,11 @@ public class MainActivity extends Activity
             case 2:
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, SettingsFragment.newInstance())
+                        .commit();
+                break;
+            case 3:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, DeveloperFragment.newInstance())
                         .commit();
                 break;
         }

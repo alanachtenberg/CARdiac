@@ -4,6 +4,7 @@
     <string name="title_section1">Home</string>
     <string name="title_section2">Stats</string>
     <string name="title_section3">Settings</string>
+    <string name="title_section4">Developer</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
