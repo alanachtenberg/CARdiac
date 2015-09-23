@@ -8,11 +8,13 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TimePicker;
 
+import java.security.InvalidParameterException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -20,6 +22,7 @@ import java.util.TimerTask;
  * Created by Alan on 9/21/2015.
  */
 public class PopUpDialogFragment extends DialogFragment {
+    public static String TIMEOUT_ARG_KEY="TIMEOUT";
     private static String DIALOGUE_TITLE = "Are you OK?         ";
     private static String MESSAGE = "A problem was detected\n" +
             "Press YES to confirm\n\n" +
@@ -27,10 +30,10 @@ public class PopUpDialogFragment extends DialogFragment {
 
     private static String POS_BUTTON_TEXT = "YES";
     private static String NEG_BUTTON_TEXT = "NO";
-    private static int TIMEOUT = 10 * 1000; //milliseconds
     private static int INTERVAL = 500; //Interval to update countdown
-
+    private int mTimeout = 10 * 1000; //milliseconds
     private Dialog mDialog;
+    private CountDownTimer mCountDownTimer;
 
     @Nullable
     @Override
@@ -41,6 +44,15 @@ public class PopUpDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Bundle args = getArguments();
+        final int timeout = args.getInt(TIMEOUT_ARG_KEY, 1);
+        if (timeout < 1) {
+            final String errorMsg = "Parameter timeout must be at least one second";
+            Log.e("POP_UP_FRAGMENT", errorMsg);
+            throw new InvalidParameterException(errorMsg);
+        }
+        this.mTimeout = timeout * 1000;
+
         TimePickerDialog.Builder builder = new TimePickerDialog.Builder(getActivity());
         builder.setTitle(DIALOGUE_TITLE);
         builder.setMessage(String.format(MESSAGE));
@@ -65,20 +77,22 @@ public class PopUpDialogFragment extends DialogFragment {
 
         mDialog = builder.create();
 
+        mCountDownTimer = new CountDownTimer(mTimeout, INTERVAL) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long seconds = millisUntilFinished / 1000;
+                mDialog.setTitle(String.format("%s %d", DIALOGUE_TITLE, seconds));
+            }
+
+            @Override
+            public void onFinish() {
+                mDialog.dismiss();
+                //TODO user did not respond in time, create alert
+            }
+        };
+
         return mDialog;
     }
 
-    private CountDownTimer mCountDownTimer = new CountDownTimer(TIMEOUT, INTERVAL) {
-        @Override
-        public void onTick(long millisUntilFinished) {
-            long seconds = millisUntilFinished / 1000;
-            mDialog.setTitle(String.format("%s %d", DIALOGUE_TITLE, seconds));
-        }
-
-        @Override
-        public void onFinish() {
-            mDialog.dismiss();
-            //TODO user did not respond in time, create alert
-        }
-    };
 }
+
