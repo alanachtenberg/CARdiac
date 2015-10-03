@@ -1,4 +1,4 @@
-package com.appspot.cadiac_404.androidapp;
+package com.appspot.cadiac_404.androidapp.preference;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
+
+import com.appspot.cadiac_404.androidapp.R;
 
 
 /**

@@ -44,7 +44,11 @@ public class DeveloperFragment  extends Fragment{
         mPopUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new PopUpDialogFragment().show(getFragmentManager(),"pop_up_dialog_fragment");
+                Bundle args = new Bundle();
+                args.putInt(PopUpDialogFragment.TIMEOUT_ARG_KEY,10);
+                PopUpDialogFragment popUp = new PopUpDialogFragment();
+                popUp.setArguments(args);
+                popUp.show(getFragmentManager(), "pop_up_dialog_fragment");
             }
         });
     }
