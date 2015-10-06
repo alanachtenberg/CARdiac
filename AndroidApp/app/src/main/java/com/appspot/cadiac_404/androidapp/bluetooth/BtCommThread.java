@@ -14,9 +14,6 @@ import java.util.UUID;
  * Created by Alan on 3/31/2015.
  */
 public class BtCommThread extends Thread {
-    private static final String TAG = "Bluetooth";
-    private static UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-
     private BluetoothDevice device;
     private BluetoothSocket socket;
 
@@ -24,13 +21,17 @@ public class BtCommThread extends Thread {
     private PrintWriter output;
     private BluetoothInterface callbacks;
 
-    BtCommThread(BluetoothDevice btDevice, BluetoothInterface btInterface) throws IOException {//let caller handle Exception with constructor
+    BtCommThread(BluetoothDevice btDevice, BluetoothInterface btInterface) throws IOException, InterruptedException {//let caller handle Exception with constructor
         callbacks = btInterface;
         device = btDevice;
-        socket = device.createInsecureRfcommSocketToServiceRecord(uuid);
+        socket = device.createInsecureRfcommSocketToServiceRecord(BluetoothService.uuid);
         socket.connect();//attempt connection
         input = new BufferedReader(new InputStreamReader(socket.getInputStream()));//get input
         output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));//get output
+    }
+
+    public void setCallbacks(BluetoothInterface callbacks) {
+        this.callbacks = callbacks;
     }
 
     @Override

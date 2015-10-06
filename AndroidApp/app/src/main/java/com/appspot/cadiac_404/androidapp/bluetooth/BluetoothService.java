@@ -9,14 +9,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.os.ParcelUuid;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.UUID;
 
 public class BluetoothService extends Service {
+    public static UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     public static String LOGGER_TAG = "Bluetooth";
     private SharedPreferences mSP;
     private BluetoothAdapter mBluetoothAdapter;
@@ -43,13 +46,13 @@ public class BluetoothService extends Service {
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(deviceFoundReceiver, filter); // Don't forget to unregister during onDestroy
         filter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
-        registerReceiver(deviceFoundReceiver, filter);
+        registerReceiver(actionStateReciever, filter);
         Log.d(LOGGER_TAG, "Bluetooth Comm Service Created");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (btCommThread != null) {
+        if (btCommThread == null) {
             Toast.makeText(this, "BluetoothComm Service Started", Toast.LENGTH_SHORT).show();
             retrievePreferences();//gets target device name
             targetDevicePaired = checkForTargetDevice();
@@ -57,9 +60,9 @@ public class BluetoothService extends Service {
                 discoverDevice();//initiate discovery
             } else if (btCommThread == null || !btCommThread.isAlive()) {
                 try {
-                    btCommThread = new BtCommThread(targetDevice, callbacks);
+                    btCommThread = new BtCommThread(targetDevice, mCallbacks);
                     btCommThread.start();//
-                } catch (IOException e) {
+                } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                     btCommThread = null;//must have been a problem with Thread constructor, so get rid of instance
                     Toast.makeText(this, "Connection Failed", Toast.LENGTH_LONG).show();
@@ -79,7 +82,12 @@ public class BluetoothService extends Service {
     @Override
     public void onDestroy() {
         try {
-            unregisterReceiver(deviceFoundReceiver);
+            try {
+                unregisterReceiver(deviceFoundReceiver);
+                unregisterReceiver(actionStateReciever);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();//ignore for unit test
+            }
 
             //dispose of connection thread
             if (btCommThread != null) {
@@ -89,6 +97,7 @@ public class BluetoothService extends Service {
 
             }
             Toast.makeText(this, "Bluetooth Comm Service Destroyed", Toast.LENGTH_SHORT).show();
+            this.stopSelf();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -101,9 +110,14 @@ public class BluetoothService extends Service {
             // Loop through paired devices
             for (BluetoothDevice device : pairedDevices) {
                 // Check if our device is paired already
-                if (device.getName().equals(targetDeviceName)) {//if paired device name is the same as our preference
-                    targetDevice = device;
-                    return true;
+                // Check if our device is paired already
+                device.fetchUuidsWithSdp();//refresh uuid list
+                ParcelUuid[] parcelUuid = device.getUuids();
+                for (int i = 0; i < parcelUuid.length; ++i) {
+                    if (parcelUuid[i].getUuid().equals(uuid)) {//target device contains our uuid
+                        targetDevice = device;
+                        return true;
+                    }
                 }
             }
         }
@@ -147,9 +161,9 @@ public class BluetoothService extends Service {
                         && intent.getParcelableExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE).equals(BluetoothDevice.BOND_BONDING)) {
                     if (btCommThread == null || btCommThread.isAlive() == false) {
                         try {
-                            btCommThread = new BtCommThread(targetDevice, callbacks);
+                            btCommThread = new BtCommThread(targetDevice, mCallbacks);
                             btCommThread.start();//start connection thread
-                        } catch (IOException e) {
+                        } catch (IOException | InterruptedException e) {
                             e.printStackTrace();
                             btCommThread = null;//must have been a problem with Thread constructor, so get rid of instance
                             Toast.makeText(context, "Connection Failed", Toast.LENGTH_LONG).show();
@@ -161,10 +175,11 @@ public class BluetoothService extends Service {
         }
     };
 
-    BluetoothInterface callbacks = new BluetoothInterface() {
+    BluetoothInterface mCallbacks = new BluetoothInterface() {
         @Override
         public void handleReceivedMessages(String jsonString) {
             //TODO parse received json object
+            Log.i(LOGGER_TAG, jsonString);
         }
 
         @Override
@@ -177,4 +192,13 @@ public class BluetoothService extends Service {
             Log.e(LOGGER_TAG, message);
         }
     };
+
+    /*
+    * Used for unit test
+     */
+    public void setCallbacks(BluetoothInterface callbacks) {
+        if (btCommThread != null) {
+            btCommThread.setCallbacks(callbacks);
+        }
+    }
 }
