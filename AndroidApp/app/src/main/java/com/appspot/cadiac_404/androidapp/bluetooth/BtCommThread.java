@@ -36,7 +36,7 @@ public class BtCommThread extends Thread {
 
     @Override
     public void run() {
-        while (true) {
+        while (socket.isConnected()) {
             String receivedMessage;
             receivedMessage = read();
             callbacks.logMessage(receivedMessage);

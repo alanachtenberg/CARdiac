@@ -7,6 +7,7 @@ import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.util.Calendar;
 import java.util.concurrent.TimeoutException;
@@ -19,25 +20,26 @@ import java.util.concurrent.TimeoutException;
 *Bluetooth must be enabled prior to test, bluetooth server must also be discoverable and running prior to test.
  */
 public class BluetoothTest extends ServiceTestCase<BluetoothService> {
-    private static String EXPECTED_MESSAGE;
     private static int TIMEOUT = 15;
+    private static JSONObject EXPECTED_JSON_OBJECT;
     static {
-        JSONObject expectedJSONObject = new JSONObject();
+        EXPECTED_JSON_OBJECT = new JSONObject();
+        JSONObject time = new JSONObject();
         try {
-            expectedJSONObject.put("time", Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
-            expectedJSONObject.put("accident", false);
-            expectedJSONObject.put("velocity", 45);
-            expectedJSONObject.put("relativeVelocity", 10);
-            expectedJSONObject.put("warning", true);
-            expectedJSONObject.put("heartRate", 10);
+            time.put("hour",Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
+            EXPECTED_JSON_OBJECT.put("time",time);
+            EXPECTED_JSON_OBJECT.put("accident", false);
+            EXPECTED_JSON_OBJECT.put("velocity", 45);
+            EXPECTED_JSON_OBJECT.put("relativeVelocity", 10);
+            EXPECTED_JSON_OBJECT.put("warning", true);
+            EXPECTED_JSON_OBJECT.put("heartRate", 10);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        EXPECTED_MESSAGE = expectedJSONObject.toString();
     }
 
     BluetoothService btService;
-    String message;
+    JSONObject receivedObject;
     public BluetoothTest() {
         super(BluetoothService.class);
     }
@@ -64,11 +66,16 @@ public class BluetoothTest extends ServiceTestCase<BluetoothService> {
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         assertEquals(true, adapter.isEnabled());//insure bluetooth is enabled
     }
-    public void testMessageRecieved() throws InterruptedException, TimeoutException {
+    public void test() throws InterruptedException, TimeoutException, JSONException {
         for (int i =0; i<TIMEOUT;++i){
             Thread.sleep(1000);//wait one second
-            if (message!=null){
-                assertEquals(EXPECTED_MESSAGE, message);
+            if (receivedObject!=null){
+                assertEquals(EXPECTED_JSON_OBJECT.getJSONObject("time").get("hour"), receivedObject.getJSONObject("time").get("hour"));
+                assertEquals(EXPECTED_JSON_OBJECT.get("accident"), receivedObject.get("accident"));
+                assertEquals(EXPECTED_JSON_OBJECT.get("velocity"), receivedObject.get("velocity"));
+                assertEquals(EXPECTED_JSON_OBJECT.get("relativeVelocity"), receivedObject.get("relativeVelocity"));
+                assertEquals(EXPECTED_JSON_OBJECT.get("warning"), receivedObject.get("warning"));
+                assertEquals(EXPECTED_JSON_OBJECT.get("heartrate"), receivedObject.get("heartrate"));
             }
         }
         throw new TimeoutException("BluetoothTest Time Out");
@@ -77,9 +84,15 @@ public class BluetoothTest extends ServiceTestCase<BluetoothService> {
 
     private BluetoothInterface callbacks = new BluetoothInterface() {
         @Override
-        public void handleReceivedMessages(String jsonString) {
-            System.out.println(jsonString);
-            message=jsonString;
+        public void handleReceivedMessages(String jsonString){
+            JSONTokener tokener= new JSONTokener(jsonString);
+            try {
+                receivedObject = (JSONObject)tokener.nextValue();
+            } catch (JSONException e) {
+                e.printStackTrace();
+                assert false;
+            }
+
         }
 
         @Override
