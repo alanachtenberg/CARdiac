@@ -12,7 +12,7 @@
         <option name="HTTP_PORT" value="8080" />
         <option name="WAR_DIR" value="C:\GitHub\CARdiac_AndroidApp\AndroidApp\server\build\exploded-app" />
         <option name="WEB_APP_DIR" value="C:\GitHub\CARdiac_AndroidApp\AndroidApp\server\src\main\webapp" />
-        <option name="APPENGINE_SDKROOT" value="C:\Users\Alan\.gradle\appengine-sdk\appengine-java-sdk-1.9.26" />
+        <option name="APPENGINE_SDKROOT" value="C:\Users\Alan\.gradle\appengine-sdk\appengine-java-sdk-1.9.27" />
       </configuration>
     </facet>
     <facet type="java-gradle" name="Java-Gradle">
