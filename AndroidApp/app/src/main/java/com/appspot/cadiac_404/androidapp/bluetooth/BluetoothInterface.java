@@ -10,4 +10,5 @@ public interface BluetoothInterface {
     void logMessage(String message);
 
     void logError(String message);
+
 }

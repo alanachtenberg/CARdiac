@@ -20,7 +20,7 @@ public class BtCommThread extends Thread {
     private BufferedReader input;
     private PrintWriter output;
     private BluetoothInterface callbacks;
-
+    private static String CLOSE_MESSAGE="CLOSING CONNECTION";
     BtCommThread(BluetoothDevice btDevice, BluetoothInterface btInterface) throws IOException, InterruptedException {//let caller handle Exception with constructor
         callbacks = btInterface;
         device = btDevice;
@@ -39,7 +39,8 @@ public class BtCommThread extends Thread {
         while (socket.isConnected()) {
             String receivedMessage;
             receivedMessage = read();
-            callbacks.logMessage(receivedMessage);
+            if(receivedMessage!=null)
+                callbacks.logMessage(receivedMessage);
             callbacks.handleReceivedMessages(receivedMessage);
         }
     }
@@ -67,10 +68,14 @@ public class BtCommThread extends Thread {
     public void close() {
         try {
             if (socket != null && socket.isConnected() == true) {
+                write("CLOSING CONNECTION");
+                this.sleep(1000);//give server a little time to react before destroying pipe
                 this.socket.close();
                 this.socket = null;//set socket to null
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

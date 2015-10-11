@@ -92,7 +92,7 @@ public class BluetoothService extends Service {
             //dispose of connection thread
             if (btCommThread != null) {
                 btCommThread.interrupt();//signals for thread to stop execution as soon as possible
-                btCommThread.close();//closes socket connection to device, must be done to cancel any blocking reads that might prevent interruption
+                closeConnection();//closes socket connection to device, must be done to cancel any blocking reads that might prevent interruption
                 btCommThread.join();//wait for thread to complete execution
 
             }
@@ -131,7 +131,7 @@ public class BluetoothService extends Service {
     }
 
     private void retrievePreferences() {
-        targetDeviceName = mSP.getString("bt_device_name", "udoo");
+        targetDeviceName = mSP.getString("bt_device_name", "UDOO");
     }
 
 
@@ -191,7 +191,16 @@ public class BluetoothService extends Service {
         public void logError(String message) {
             Log.e(LOGGER_TAG, message);
         }
+
     };
+
+    public void sendMessage(String message) {
+        btCommThread.write(message);
+    }
+    public void closeConnection(){
+        btCommThread.close();
+    }
+
 
     /*
     * Used for unit test
@@ -201,4 +210,6 @@ public class BluetoothService extends Service {
             btCommThread.setCallbacks(callbacks);
         }
     }
+
+
 }
