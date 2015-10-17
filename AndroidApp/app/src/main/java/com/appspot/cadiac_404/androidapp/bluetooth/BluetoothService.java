@@ -21,9 +21,10 @@ import java.util.UUID;
 public class BluetoothService extends Service {
     public static UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     public static String LOGGER_TAG = "Bluetooth";
+    private static int NUM_RETRIES = 10; //number of retries to connect bluetooth socket
+    private int tryCount = 0;
     private SharedPreferences mSP;
     private BluetoothAdapter mBluetoothAdapter;
-    private Set<BluetoothDevice> pairedDevices;
     private String targetDeviceName = "default";
     private Boolean targetDevicePaired = false;
     private BluetoothDevice targetDevice;
@@ -40,6 +41,7 @@ public class BluetoothService extends Service {
 
     @Override
     public void onCreate() {
+        tryCount = 0;
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mSP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         // Register the BroadcastReceiver for when a bluetooth device is found
@@ -52,6 +54,7 @@ public class BluetoothService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        tryCount = 0;
         if (btCommThread == null) {
             Toast.makeText(this, "BluetoothComm Service Started", Toast.LENGTH_SHORT).show();
             retrievePreferences();//gets target device name
@@ -94,7 +97,6 @@ public class BluetoothService extends Service {
                 btCommThread.interrupt();//signals for thread to stop execution as soon as possible
                 closeConnection();//closes socket connection to device, must be done to cancel any blocking reads that might prevent interruption
                 btCommThread.join();//wait for thread to complete execution
-
             }
             Toast.makeText(this, "Bluetooth Comm Service Destroyed", Toast.LENGTH_SHORT).show();
             this.stopSelf();
@@ -103,8 +105,25 @@ public class BluetoothService extends Service {
         }
     }
 
+    private void attemptConnection() throws InterruptedException, IOException {
+        try {
+            btCommThread = new BtCommThread(targetDevice, mCallbacks);
+            btCommThread.start();//start connection thread
+        }
+        catch (InterruptedException e) {
+            throw e;
+        } catch (IOException e) {
+            if (tryCount<NUM_RETRIES){
+                ++tryCount;
+                attemptConnection();
+            }else{
+                throw e;
+            }
+
+        }
+    }
     private Boolean checkForTargetDevice() {
-        pairedDevices = mBluetoothAdapter.getBondedDevices();
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
         // If there are paired devices
         if (pairedDevices.size() > 0) {
             // Loop through paired devices
@@ -113,8 +132,8 @@ public class BluetoothService extends Service {
                 // Check if our device is paired already
                 device.fetchUuidsWithSdp();//refresh uuid list
                 ParcelUuid[] parcelUuid = device.getUuids();
-                for (int i = 0; i < parcelUuid.length; ++i) {
-                    if (parcelUuid[i].getUuid().equals(uuid)) {//target device contains our uuid
+                for (ParcelUuid aParcelUuid : parcelUuid) {
+                    if (aParcelUuid.getUuid().equals(uuid)) {//target device contains our uuid
                         targetDevice = device;
                         return true;
                     }
@@ -125,8 +144,9 @@ public class BluetoothService extends Service {
     }
 
     private void discoverDevice() {
-        if (mBluetoothAdapter.isDiscovering())
+        if (mBluetoothAdapter.isDiscovering()) {
             mBluetoothAdapter.cancelDiscovery();
+        }
         mBluetoothAdapter.startDiscovery();
     }
 
@@ -159,10 +179,9 @@ public class BluetoothService extends Service {
             if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
                 if (intent.getParcelableExtra(BluetoothDevice.EXTRA_BOND_STATE).equals(BluetoothDevice.BOND_BONDED)
                         && intent.getParcelableExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE).equals(BluetoothDevice.BOND_BONDING)) {
-                    if (btCommThread == null || btCommThread.isAlive() == false) {
-                        try {
-                            btCommThread = new BtCommThread(targetDevice, mCallbacks);
-                            btCommThread.start();//start connection thread
+                    if (btCommThread == null || !btCommThread.isAlive()) {
+                        try{
+                        attemptConnection();
                         } catch (IOException | InterruptedException e) {
                             e.printStackTrace();
                             btCommThread = null;//must have been a problem with Thread constructor, so get rid of instance

@@ -37,10 +37,10 @@ public class BluetoothTest extends ServiceTestCase<BluetoothService> {
             EXPECTED_JSON_OBJECT.put("warning", true);
             EXPECTED_JSON_OBJECT.put("heartRate", 10);
 
-            EXPECTED_JSON_OBJECT_SERIAL.put("hdr",0xFFFF);
-            EXPECTED_JSON_OBJECT_SERIAL.put("val1",0xFFFF);
-            EXPECTED_JSON_OBJECT_SERIAL.put("val2",0xFFFF);
-            EXPECTED_JSON_OBJECT_SERIAL.put("ftr",0xFFFF);
+            EXPECTED_JSON_OBJECT_SERIAL.put("hdr", 8);
+            EXPECTED_JSON_OBJECT_SERIAL.put("val1", 13);
+            EXPECTED_JSON_OBJECT_SERIAL.put("val2", 17);
+            EXPECTED_JSON_OBJECT_SERIAL.put("ftr", 21);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -78,7 +78,7 @@ public class BluetoothTest extends ServiceTestCase<BluetoothService> {
         assertEquals(true, adapter.isEnabled());//insure bluetooth is enabled
     }
 
-    public void test() throws InterruptedException, TimeoutException, JSONException {
+    /*public void test() throws InterruptedException, TimeoutException, JSONException {
         for (int i = 0; i < TIMEOUT; ++i) {
             Thread.sleep(1000);//wait one second
             if (receivedObject != null) {
@@ -94,7 +94,7 @@ public class BluetoothTest extends ServiceTestCase<BluetoothService> {
         }
         btService.closeConnection();//message recieved close the connection
         throw new TimeoutException("BluetoothTest Time Out");
-    }
+    }*/
 
     public void testSerialValues() throws InterruptedException, TimeoutException, JSONException {
         for (int i = 0; i < TIMEOUT; ++i) {
@@ -104,7 +104,8 @@ public class BluetoothTest extends ServiceTestCase<BluetoothService> {
                 assertEquals(EXPECTED_JSON_OBJECT_SERIAL.get("val1"), receivedObject.get("val1"));
                 assertEquals(EXPECTED_JSON_OBJECT_SERIAL.get("val2"), receivedObject.get("val2"));
                 assertEquals(EXPECTED_JSON_OBJECT_SERIAL.get("ftr"), receivedObject.get("ftr"));
-                btService.closeConnection();//message recieved close the connection
+                if (btService != null)
+                    btService.closeConnection();//message recieved close the connection
                 return;
             }
         }

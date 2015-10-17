@@ -13,7 +13,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            multiDexEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -23,13 +24,11 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:support-v4:23.0.1'
     compile project(path: ':server', configuration: 'android-endpoints')
+    compile 'com.android.support:multidex:1.0.1'
 
     compile 'com.android.support:appcompat-v7:23.0.1'
 
     // BEGIN Google APIs
-
-    // Play Services will validate the application prior to allowing OAuth2 access.
-    compile 'com.google.android.gms:play-services:8.1.0'
 
     // The following lines implement maven imports as defined at:
     // https://code.google.com/p/google-api-java-client/wiki/Setup
@@ -49,10 +48,10 @@ dependencies {
     // Add the Android extensions for the Google API client library.
     compile(group: 'com.google.api-client', name: 'google-api-client-android',
             version: '1.18.0-rc')
-            {
+            /*{
                 // Exclude play services, since we're not using this yet.
                 exclude(group: 'com.google.android.gms:play-services', module: 'google-play-services')
-            }
+            }*/
 
     // END Google APIs
 
@@ -66,7 +65,6 @@ dependencies {
     }
 
     // This is used by the Google HTTP client library.
-    compile(group: 'com.google.guava', name: 'guava', version: '18.0')
-
+    compile(group: 'com.google.guava', name: 'guava-jdk5', version: '17.0')
 
 }

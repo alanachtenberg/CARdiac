@@ -11,12 +11,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
-<!--
     <Button
-        android:id="@+id/"
-        android:text="Pop Up Test"
+        android:id="@+id/insert_ecg_button"
+        android:text="insert ecg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>-->
+        android:layout_gravity="center"/>
+    <Button
+        android:id="@+id/list_ecg_button"
+        android:text="list_ecg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+    <TextView
+        android:id="@+id/output_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="output"/>
 
 </LinearLayout>
