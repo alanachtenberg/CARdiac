@@ -1,6 +1,5 @@
 package com.appspot.cadiac_404.androidapp.popup;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
@@ -12,17 +11,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TimePicker;
 
 import java.security.InvalidParameterException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by Alan on 9/21/2015.
  */
 public class PopUpDialogFragment extends DialogFragment {
+
+    public interface PopUpDialogFragmentIterface{
+        public void negativeResponse();
+        public void positiveResponse();
+        public void onTimeOut();
+    }
+
     public static String TIMEOUT_ARG_KEY="TIMEOUT";
+    private static PopUpDialogFragmentIterface responseCallback;
     private static String DIALOGUE_TITLE = "Are you OK?         ";
     private static String MESSAGE = "A problem was detected\n" +
             "Press YES to confirm\n\n" +
@@ -60,7 +64,7 @@ public class PopUpDialogFragment extends DialogFragment {
         builder.setPositiveButton(POS_BUTTON_TEXT, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //TODO user is okay
+                responseCallback.positiveResponse();//TODO user is okay
                 dialog.dismiss();
                 mCountDownTimer.cancel();
             }
@@ -71,7 +75,7 @@ public class PopUpDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();//close dialog
                 mCountDownTimer.cancel();
-                //TODO user said they were not okay
+                responseCallback.negativeResponse();//TODO user said they were not okay
             }
         });
 
@@ -87,11 +91,15 @@ public class PopUpDialogFragment extends DialogFragment {
             @Override
             public void onFinish() {
                 mDialog.dismiss();
-                //TODO user did not respond in time, create alert
+                responseCallback.onTimeOut();//TODO user did not respond in time, create alert
             }
         };
 
         return mDialog;
+    }
+
+    public void setResponseCallbacks(PopUpDialogFragmentIterface callbacks){
+        responseCallback = callbacks;
     }
 
 }

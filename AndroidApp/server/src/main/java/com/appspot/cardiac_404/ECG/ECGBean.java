@@ -1,11 +1,10 @@
 package com.appspot.cardiac_404.ECG;
 
-import java.io.Serializable;
-
 /**
  * Created by Alan on 10/6/2015.
  */
 public class ECGBean {
+    private String id;
     private int heartRate;
     private boolean problemOne;
     private boolean problemTwo;
@@ -51,5 +50,13 @@ public class ECGBean {
 
     public void setproblemThree(boolean problemThree) {
         this.problemThree = problemThree;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
