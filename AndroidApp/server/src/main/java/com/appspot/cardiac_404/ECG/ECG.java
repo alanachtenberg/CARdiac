@@ -14,7 +14,7 @@ import java.util.ArrayList;
         version = Constants.VERSION,
         namespace = @ApiNamespace(ownerDomain = Constants.DOMAIN, ownerName = Constants.DOMAIN,
                 packagePath = "ECG"),
-        clientIds = {Constants.API_EXPLORER_CLIENT_ID, Constants.ANDROID_CLIENT_ID})
+        clientIds = {Constants.WEB_CLIENT_ID,Constants.API_EXPLORER_CLIENT_ID, Constants.ANDROID_CLIENT_ID})
 public class ECG {
     private ArrayList<ECGBean> ecgDataList = new ArrayList<ECGBean>();
 
