@@ -107,6 +107,7 @@ public class DeveloperFragment extends Fragment {
                     public void run() {
                         try {
                             ECGBean bean = new ECGBean();
+                            bean.setId("Android Developer Test");
                             bean.setHeartRate(100);
                             bean.setProblemOne(false);
                             bean.setProblemTwo(false);
@@ -138,7 +139,7 @@ public class DeveloperFragment extends Fragment {
                     protected void onPostExecute(ECGBeanCollection ecgBeans) {
                         super.onPostExecute(ecgBeans);
                         mOutputTextView.append("\nNew Response\n");
-                        mOutputTextView.append(ecgBeans.getItems().get(ecgBeans.size()-1).toString());
+                        mOutputTextView.append(ecgBeans.getItems().toString());
                     }
                 };
                 listECGTask.execute();
