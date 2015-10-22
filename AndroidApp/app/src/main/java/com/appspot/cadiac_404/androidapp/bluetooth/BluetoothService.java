@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class BluetoothService extends Service {
-    public static UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    public static UUID uuid = UUID.fromString("1afe39b3-2c5c-4bf4-a2c2-267ee767fd9d");
     public static String LOGGER_TAG = "Bluetooth";
     private static int NUM_RETRIES = 10; //number of retries to connect bluetooth socket
     private int tryCount = 0;
@@ -63,8 +63,7 @@ public class BluetoothService extends Service {
                 discoverDevice();//initiate discovery
             } else if (btCommThread == null || !btCommThread.isAlive()) {
                 try {
-                    btCommThread = new BtCommThread(targetDevice, mCallbacks);
-                    btCommThread.start();//
+                    attemptConnection();
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                     btCommThread = null;//must have been a problem with Thread constructor, so get rid of instance
@@ -91,7 +90,6 @@ public class BluetoothService extends Service {
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();//ignore for unit test
             }
-
             //dispose of connection thread
             if (btCommThread != null) {
                 btCommThread.interrupt();//signals for thread to stop execution as soon as possible
@@ -109,19 +107,19 @@ public class BluetoothService extends Service {
         try {
             btCommThread = new BtCommThread(targetDevice, mCallbacks);
             btCommThread.start();//start connection thread
-        }
-        catch (InterruptedException e) {
-            throw e;
         } catch (IOException e) {
-            if (tryCount<NUM_RETRIES){
+            if (tryCount < NUM_RETRIES) {
                 ++tryCount;
+                Log.d(LOGGER_TAG, String.format("Attempted connection failed retrying connection, retries = %d", tryCount));
                 attemptConnection();
-            }else{
+            } else {
+                Log.e(LOGGER_TAG, String.format("Could not open connection, retries = %d", NUM_RETRIES));
                 throw e;
             }
 
         }
     }
+
     private Boolean checkForTargetDevice() {
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
         // If there are paired devices
@@ -180,11 +178,11 @@ public class BluetoothService extends Service {
                 if (intent.getParcelableExtra(BluetoothDevice.EXTRA_BOND_STATE).equals(BluetoothDevice.BOND_BONDED)
                         && intent.getParcelableExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE).equals(BluetoothDevice.BOND_BONDING)) {
                     if (btCommThread == null || !btCommThread.isAlive()) {
-                        try{
-                        attemptConnection();
+                        try {
+                            attemptConnection();
                         } catch (IOException | InterruptedException e) {
                             e.printStackTrace();
-                            btCommThread = null;//must have been a problem with Thread constructor, so get rid of instance
+                            btCommThread = null;
                             Toast.makeText(context, "Connection Failed", Toast.LENGTH_LONG).show();
                             stopSelf();//stop the bluetooth service, let user have a chance to update settings
                         }
@@ -214,10 +212,15 @@ public class BluetoothService extends Service {
     };
 
     public void sendMessage(String message) {
-        btCommThread.write(message);
+        if (btCommThread != null) {
+            btCommThread.write(message);
+        }
     }
-    public void closeConnection(){
-        btCommThread.close();
+
+    public void closeConnection() {
+        if (btCommThread != null) {
+            btCommThread.close();
+        }
     }
 
 

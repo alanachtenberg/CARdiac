@@ -20,7 +20,7 @@ import java.util.concurrent.TimeoutException;
 *Bluetooth must be enabled prior to test, bluetooth server must also be discoverable and running prior to test.
  */
 public class BluetoothTest extends ServiceTestCase<BluetoothService> {
-    private static int TIMEOUT = 15;
+    private static int TIMEOUT = 20;
     private static JSONObject EXPECTED_JSON_OBJECT;
     private static JSONObject EXPECTED_JSON_OBJECT_SERIAL;
 
@@ -35,7 +35,7 @@ public class BluetoothTest extends ServiceTestCase<BluetoothService> {
             EXPECTED_JSON_OBJECT.put("velocity", 45);
             EXPECTED_JSON_OBJECT.put("relativeVelocity", 10);
             EXPECTED_JSON_OBJECT.put("warning", true);
-            EXPECTED_JSON_OBJECT.put("heartRate", 10);
+            EXPECTED_JSON_OBJECT.put("heartrate", 78);
 
             EXPECTED_JSON_OBJECT_SERIAL.put("hdr", 8);
             EXPECTED_JSON_OBJECT_SERIAL.put("val1", 13);
@@ -63,13 +63,22 @@ public class BluetoothTest extends ServiceTestCase<BluetoothService> {
         super(serviceClass);
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    private void setUpService() throws Exception {
         this.startService(new Intent(getSystemContext(), BluetoothService.class));
         btService = this.getService();
         btService.setCallbacks(callbacks);
     }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+    }
+
 
     @Override
     public void testServiceTestCaseSetUpProperly() throws Exception {
@@ -78,25 +87,29 @@ public class BluetoothTest extends ServiceTestCase<BluetoothService> {
         assertEquals(true, adapter.isEnabled());//insure bluetooth is enabled
     }
 
-    /*public void test() throws InterruptedException, TimeoutException, JSONException {
+    /*
+    *Client test with server script "jsonOverBT.py"
+    * Script must be running on server device before starting test. Or BT connection will simply fail
+     */
+    public void testBluetoothConnection() throws Exception {
+        setUpService();
         for (int i = 0; i < TIMEOUT; ++i) {
             Thread.sleep(1000);//wait one second
             if (receivedObject != null) {
-                assertEquals(EXPECTED_JSON_OBJECT.getJSONObject("time").get("hour"), receivedObject.getJSONObject("time").get("hour"));
-                assertEquals(EXPECTED_JSON_OBJECT.get("accident"), receivedObject.get("accident"));
-                assertEquals(EXPECTED_JSON_OBJECT.get("velocity"), receivedObject.get("velocity"));
-                assertEquals(EXPECTED_JSON_OBJECT.get("relativeVelocity"), receivedObject.get("relativeVelocity"));
-                assertEquals(EXPECTED_JSON_OBJECT.get("warning"), receivedObject.get("warning"));
-                assertEquals(EXPECTED_JSON_OBJECT.get("heartrate"), receivedObject.get("heartrate"));
-                btService.closeConnection();//message recieved close the connection
+                assertEquals(EXPECTED_JSON_OBJECT.getJSONObject("time").getString("hour"), receivedObject.getJSONObject("time").getString("hour"));
+                assertEquals(EXPECTED_JSON_OBJECT.getBoolean("accident"), receivedObject.getBoolean("accident"));
+                assertEquals(EXPECTED_JSON_OBJECT.getInt("velocity"), receivedObject.getInt("velocity"));
+                assertEquals(EXPECTED_JSON_OBJECT.getInt("relativeVelocity"), receivedObject.getInt("relativeVelocity"));
+                assertEquals(EXPECTED_JSON_OBJECT.getBoolean("warning"), receivedObject.getBoolean("warning"));
+                assertEquals(EXPECTED_JSON_OBJECT.getInt("heartrate"), receivedObject.getInt("heartrate"));
+                btService.closeConnection();//message received close the connection
                 return;
             }
         }
-        btService.closeConnection();//message recieved close the connection
         throw new TimeoutException("BluetoothTest Time Out");
-    }*/
+    }
 
-    public void testSerialValues() throws InterruptedException, TimeoutException, JSONException {
+    /*public void testSerialValues() throws InterruptedException, TimeoutException, JSONException {
         for (int i = 0; i < TIMEOUT; ++i) {
             Thread.sleep(1000);//wait one second
             if (receivedObject != null) {
@@ -111,7 +124,7 @@ public class BluetoothTest extends ServiceTestCase<BluetoothService> {
         }
         btService.closeConnection();//message recieved close the connection
         throw new TimeoutException("BluetoothTest Time Out");
-    }
+    }*/
 
     private BluetoothInterface callbacks = new BluetoothInterface() {
         @Override
