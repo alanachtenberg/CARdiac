@@ -13,8 +13,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
-            multiDexEnabled true
+            minifyEnabled true//helps minify number of references in the build
+            multiDexEnabled true//must be enabled, to allow support for more than ~65,000 references in a project
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

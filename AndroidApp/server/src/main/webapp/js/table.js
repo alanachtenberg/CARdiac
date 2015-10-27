@@ -1,32 +1,31 @@
-var EcgData;
-
+var TIMEOUT = 10000
+var EcgData
 function loadECGdata(){
     gapi.client.cardiacApi.eCG.listECG().execute(function(resp) {
-        console.log(resp)
         resp.items = resp.items || [];
-        EcgData = resp.items
 
-        $('EcgDataTable').dataTable().fnClearTable();
-
+        var ecgTable = $('EcgDataTable').DataTable();
+        if (ecgTable.row.length > 0){
+            table.clear();
+        }
         for (var i = 0; i < resp.items.length; i++) {
-            $('#EcgDataTable').dataTable().fnAddData( [
-                resp.items[i].id,
+            $('EcgDataTable').dataTable().fnAddData(
+                [ resp.items[i].id,
                 resp.items[i].heartRate,
                 resp.items[i].problemOne,
                 resp.items[i].problemTwo,
-                resp.items[i].problemThree,
-                ]
-              );
-
+                resp.items[i].problemThree ]
+                );
         }
     } );
+    setTimeout(function(){loadECGdata()},TIMEOUT);
 };
 
 $('#ReloadEcgButton').click(loadECGdata);
 
 function initTable(){
     $('#EcgDataTable').DataTable( {
-                         data: EcgData,
+                        data: EcgData,
                          columns: [
                             { title: "ID" },
                             { title: "Heart Rate" },
@@ -34,11 +33,9 @@ function initTable(){
                             { title: "Problem Two" },
                             { title: "Problem Three" }
                             ]
-                } );
-//    gapi.client.cardiacApi.eCG.insertECG().execute(function resp){
-//    }
+    } );
+    setTimeout(loadECGdata(), TIMEOUT);
 };
-
 /**
  * Initializes the application.
  * @param {string} apiRoot Root of the API's path.
