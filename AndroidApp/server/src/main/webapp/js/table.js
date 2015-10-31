@@ -2,7 +2,7 @@ var TIMEOUT = 10000;
 var EcgData = ["default",0,false,false,false];
 
 function loadECGdata(){
-    gapi.client.cardiacApi.eCG.listECG().execute(function(resp) {
+    gapi.client.cardiacApi.ecgApi.listECG().execute(function(resp) {
         resp.items = resp.items || [];
 
         var ecgTable = $('#EcgDataTable').DataTable();
