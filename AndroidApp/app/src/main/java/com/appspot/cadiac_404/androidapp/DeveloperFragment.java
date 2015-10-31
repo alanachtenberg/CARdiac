@@ -18,15 +18,15 @@ import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 
 import java.io.IOException;
 
-import cardiac_404.appspot.com.ECG.cardiacApi.CardiacApi;
-import cardiac_404.appspot.com.ECG.cardiacApi.model.ECGBean;
-import cardiac_404.appspot.com.ECG.cardiacApi.model.ECGBeanCollection;
+import cardiac_404.appspot.com.cardiacApi.model.ECGBean;
+import cardiac_404.appspot.com.cardiacApi.model.ECGBeanCollection;
+import cardiac_404.appspot.com.cardiacApi.CardiacApi;
 
 /**
  * Created by Alan on 9/21/2015.
  */
 public class DeveloperFragment extends Fragment {
-    private CardiacApi.ECG endpointsApi;
+    private CardiacApi endpointsApi;
     private View mView;
     private Button mPopUpButton;
     private Button mInsertECG;
@@ -57,7 +57,7 @@ public class DeveloperFragment extends Fragment {
         });
 
         endpointsBuilder.setApplicationName("CARdiac");
-        endpointsApi = endpointsBuilder.build().eCG();
+        endpointsApi = endpointsBuilder.build();
     }
 
     @Nullable
@@ -112,7 +112,7 @@ public class DeveloperFragment extends Fragment {
                             bean.setProblemOne(false);
                             bean.setProblemTwo(false);
                             bean.setProblemThree(true);
-                            endpointsApi.insertECG(bean).execute();
+                            endpointsApi.ecgApi().insertECG(bean).execute();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -128,7 +128,7 @@ public class DeveloperFragment extends Fragment {
                     @Override
                     protected ECGBeanCollection doInBackground(Void... params) {
                         try {
-                            return endpointsApi.listECG().execute();
+                            return endpointsApi.ecgApi().listECG().execute();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

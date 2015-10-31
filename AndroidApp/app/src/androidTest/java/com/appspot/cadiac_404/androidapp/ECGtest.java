@@ -8,9 +8,9 @@ import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import java.io.IOException;
 import java.util.Calendar;
 
-import cardiac_404.appspot.com.ECG.cardiacApi.CardiacApi;
-import cardiac_404.appspot.com.ECG.cardiacApi.model.ECGBean;
-import cardiac_404.appspot.com.ECG.cardiacApi.model.ECGBeanCollection;
+import cardiac_404.appspot.com.cardiacApi.CardiacApi;
+import cardiac_404.appspot.com.cardiacApi.model.ECGBean;
+import cardiac_404.appspot.com.cardiacApi.model.ECGBeanCollection;
 
 /**
  * Created by Alan on 10/18/2015.
@@ -52,13 +52,13 @@ public class ECGtest extends AndroidTestCase {
         ecgObject.setProblemOne(EXPECTED_PROB_1);
         ecgObject.setProblemTwo(EXPECTED_PROB_2);
         ecgObject.setProblemThree(EXPECTED_PROB_3);
-        endpointApi.eCG().insertECG(ecgObject).execute();
+        endpointApi.ecgApi().insertECG(ecgObject).execute();
         System.out.println("Inserting ECG object");
         System.out.println(ecgObject.toPrettyString());
     }
 
     private void listECG() throws IOException {
-        ECGBeanCollection ecgList = endpointApi.eCG().listECG().execute();
+        ECGBeanCollection ecgList = endpointApi.ecgApi().listECG().execute();
         ECGBean ecgObject = null;
         for (ECGBean bean : ecgList.getItems()) {
             if (bean.getId()!=null && bean.getId().equals(uniqueID)) {

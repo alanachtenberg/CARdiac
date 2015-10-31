@@ -11,8 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import com.appspot.cadiac_404.androidapp.preference.SettingsFragment;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 
-import cardiac_404.appspot.com.ECG.cardiacApi.CardiacApi;
-
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
