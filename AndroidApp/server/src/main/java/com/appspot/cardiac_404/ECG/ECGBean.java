@@ -10,16 +10,18 @@ public class ECGBean {
     private boolean problemTwo;
     private boolean problemThree;
 
-    public ECGBean(){
+    public ECGBean() {
 
     }
-    public ECGBean(int heartRate, boolean problemOne, boolean problemTwo, boolean problemThree)
-    {
-        this.heartRate=heartRate;
-        this.problemOne=problemOne;
-        this.problemTwo=problemTwo;
-        this.problemThree=problemThree;
+
+    public ECGBean(String id, int heartRate, boolean problemOne, boolean problemTwo, boolean problemThree) {
+        this.id = id;
+        this.heartRate = heartRate;
+        this.problemOne = problemOne;
+        this.problemTwo = problemTwo;
+        this.problemThree = problemThree;
     }
+
     public int getHeartRate() {
         return heartRate;
     }
