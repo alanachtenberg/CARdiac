@@ -1,4 +1,4 @@
-package com.appspot.cardiac_404.Time;
+package com.appspot.cardiac_404;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -21,7 +21,6 @@ public class TimeBean implements Serializable{
         this.time = time;
     }
     public void setTimeFromJson(){
-
         //TODO convert json fields to time
     }
 }
