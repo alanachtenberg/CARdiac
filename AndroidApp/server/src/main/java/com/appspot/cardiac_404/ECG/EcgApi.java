@@ -2,6 +2,8 @@ package com.appspot.cardiac_404.ECG;
 
 import com.appspot.cardiac_404.CARdiacApiBase;
 import com.google.api.server.spi.config.ApiMethod;
+import com.google.api.server.spi.response.UnauthorizedException;
+import com.google.appengine.api.users.User;
 
 import java.util.ArrayList;
 
@@ -19,12 +21,18 @@ public class EcgApi extends CARdiacApiBase {
     }
 
     @ApiMethod(httpMethod = "post")
-    public void insertECG(ECGBean data) {
+    public void insertECG(User user, ECGBean data) throws UnauthorizedException {
+        if (user==null || user.getEmail()==null){
+            throw new UnauthorizedException("user or email is null");
+        }
         ecgDataList.add(data);
     }
 
     @ApiMethod(httpMethod = "get")
-    public ArrayList<ECGBean> listECG() {
+    public ArrayList<ECGBean> listECG(User user) throws UnauthorizedException {
+        if (user==null || user.getEmail()==null){
+            throw new UnauthorizedException("user or email is null");
+        }
         return ecgDataList;
     }
 
