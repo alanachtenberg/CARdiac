@@ -1,6 +1,7 @@
 package com.appspot.cardiac_404.ECG;
 
 import com.appspot.cardiac_404.CARdiacApiBase;
+import com.appspot.cardiac_404.TimeBean;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.api.users.User;
@@ -16,7 +17,7 @@ public class EcgApi extends CARdiacApiBase {
 
     static {
         //test data
-        ECGBean bean = new ECGBean("TEST DATA", 123, true, false, false);
+        ECGBean bean = new ECGBean("TEST DATA", new TimeBean(), 123, true, false, false);
         ecgDataList.add(bean);
     }
 

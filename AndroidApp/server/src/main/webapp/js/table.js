@@ -1,12 +1,8 @@
+
 //GOOGLE AUTH
-var CLIENT_ID =
-    "775668101465-m8jfmuet88enh2hofbiub68j83a8l007.apps.googleusercontent.com";
-/**
- * Scopes used by the application.
- * @type {string}
- */
-var SCOPES =
-    'https://www.googleapis.com/auth/userinfo.email';
+var CLIENT_ID = "775668101465-m8jfmuet88enh2hofbiub68j83a8l007.apps.googleusercontent.com";
+
+var SCOPES =  'https://www.googleapis.com/auth/userinfo.email';
 
 
 
@@ -14,24 +10,31 @@ var TIMEOUT = 10000;
 var EcgData = ["default",0,false,false,false];
 
 function loadECGdata(){
-    gapi.client.cardiacApi.ecgApi.listECG().execute(function(resp) {
-        resp.items = resp.items || [];
+    var request = gapi.client.oauth2.userinfo.get().execute(function(resp) {
+        if (!resp.code) {
+               gapi.client.cardiacApi.ecgApi.listECG().execute(function(resp) {
+                       resp.items = resp.items || [];
 
-        var ecgTable = $('#EcgDataTable').DataTable();
-        if (ecgTable.data().length > 0){
-            ecgTable.clear().draw();
+                       var ecgTable = $('#EcgDataTable').DataTable();
+                       if (ecgTable.data().length > 0){
+                           ecgTable.clear().draw();
+                       }
+                       for (var i = 0; i < resp.items.length; i++) {
+                           ecgTable.row.add(
+                               [ resp.items[i].id,
+                               resp.items[i].heartRate,
+                               resp.items[i].problemOne,
+                               resp.items[i].problemTwo,
+                               resp.items[i].problemThree ]
+                               ).draw();
+                       }
+                   } );
+                   setTimeout(function(){loadECGdata()},TIMEOUT);
+        }else{
+            signIn()
         }
-        for (var i = 0; i < resp.items.length; i++) {
-            ecgTable.row.add(
-                [ resp.items[i].id,
-                resp.items[i].heartRate,
-                resp.items[i].problemOne,
-                resp.items[i].problemTwo,
-                resp.items[i].problemThree ]
-                ).draw();
-        }
-    } );
-    setTimeout(function(){loadECGdata()},TIMEOUT);
+    });
+
 };
 
 $('#ReloadEcgButton').click(loadECGdata);
@@ -47,9 +50,7 @@ initTable = function(){
  */
 
  signIn = function (){
-    gapi.auth.authorize({CLIENT_ID,
-           scope: SCOPES, immediate: true},
-        initTable);
+    gapi.auth.authorize({client_id:CLIENT_ID, scope: SCOPES, immediate: false}, initTable);
  }
 
 initECGApi = function() {
