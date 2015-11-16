@@ -47,7 +47,7 @@ public class ECGtest extends AndroidTestCase {
     private void insertECG() throws IOException {
         uniqueID = Calendar.getInstance().getTime().toString();
         ECGBean ecgObject = new ECGBean();
-        ecgObject.setId(uniqueID);
+        ecgObject.setId((long)0);
         ecgObject.setHeartRate(EXPECTED_HEART_RATE);
         ecgObject.setProblemOne(EXPECTED_PROB_1);
         ecgObject.setProblemTwo(EXPECTED_PROB_2);

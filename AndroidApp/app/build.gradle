@@ -20,7 +20,8 @@ android {
             minifyEnabled true//helps minify number of references in the build
             multiDexEnabled true
             //must be enabled, to allow support for more than ~65,000 references in a project
-            /*proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'*///proguard was obfuscating classes necessary for google authentication
+            /*proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'*/
+//proguard was obfuscating classes necessary for google authentication
         }
     }
     compileOptions {
@@ -32,7 +33,6 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(path: ':server', configuration: 'android-endpoints')
-    compile 'com.android.support:multidex:1.0.1'
     // BEGIN Google APIs
     // The following lines implement maven imports as defined at:
     // https://code.google.com/p/google-api-java-client/wiki/Setup
@@ -48,7 +48,6 @@ dependencies {
     // This will automatically include play services as long as you have download that library
     // from the Android SDK manager.
     // Add the Android extensions for the Google API client library.
-    compile 'com.google.api-client:google-api-client-android:1.18.0-rc'
     /*{
                             // Exclude play services, since we're not using this yet.
                             exclude(group: 'com.google.android.gms:play-services', module: 'google-play-services')
@@ -60,6 +59,11 @@ dependencies {
         exclude(group: 'com.google.android', module: 'android')
     }
     // This is used by the Google HTTP client library.
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.google.api-client:google-api-client-android:1.18.0-rc'
     compile 'com.google.guava:guava-jdk5:17.0'
-    compile 'com.google.android.gms:play-services:8.1.0'
+    compile 'com.google.android.gms:play-services:8.3.0'
+    compile 'com.google.android.gms:play-services-ads:8.3.0'
+    compile 'com.google.android.gms:play-services-identity:8.3.0'
+    compile 'com.google.android.gms:play-services-gcm:8.3.0'
 }

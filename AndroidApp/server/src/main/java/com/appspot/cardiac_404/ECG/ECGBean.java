@@ -1,12 +1,19 @@
 package com.appspot.cardiac_404.ECG;
 
 import com.appspot.cardiac_404.TimeBean;
+import java.io.Serializable;
+
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
 
 /**
  * Created by Alan on 10/6/2015.
  */
-public class ECGBean {
-    private String id;
+
+@Entity
+public class ECGBean implements Serializable{
+    @Id
+    private Long id;
     private TimeBean time;
     private int heartRate;
     private boolean problemOne;
@@ -17,7 +24,7 @@ public class ECGBean {
 
     }
 
-    public ECGBean(String id, TimeBean time, int heartRate, boolean problemOne, boolean problemTwo, boolean problemThree) {
+    public ECGBean(Long id, TimeBean time, int heartRate, boolean problemOne, boolean problemTwo, boolean problemThree) {
         this.id = id;
         this.time = time;
         this.heartRate = heartRate;
@@ -26,11 +33,12 @@ public class ECGBean {
         this.problemThree = problemThree;
     }
 
-    public String getId() {
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -73,4 +81,6 @@ public class ECGBean {
     public void setProblemThree(boolean problemThree) {
         this.problemThree = problemThree;
     }
+
+
 }
