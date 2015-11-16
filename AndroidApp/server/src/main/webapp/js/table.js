@@ -1,3 +1,15 @@
+//GOOGLE AUTH
+var CLIENT_ID =
+    "775668101465-m8jfmuet88enh2hofbiub68j83a8l007.apps.googleusercontent.com";
+/**
+ * Scopes used by the application.
+ * @type {string}
+ */
+var SCOPES =
+    'https://www.googleapis.com/auth/userinfo.email';
+
+
+
 var TIMEOUT = 10000;
 var EcgData = ["default",0,false,false,false];
 
@@ -24,7 +36,7 @@ function loadECGdata(){
 
 $('#ReloadEcgButton').click(loadECGdata);
 
-function initTable(){
+initTable = function(){
     var apiTable=$('#EcgDataTable').DataTable();
     apiTable.row.add(EcgData).draw();
     setTimeout(loadECGdata(), TIMEOUT);
@@ -33,7 +45,17 @@ function initTable(){
  * Initializes the application.
  * @param {string} apiRoot Root of the API's path.
  */
+
+ signIn = function (){
+    gapi.auth.authorize({CLIENT_ID,
+           scope: SCOPES, immediate: true},
+        initTable);
+ }
+
 initECGApi = function() {
     var ROOT = "https://cardiac-404.appspot.com/_ah/api"
-    gapi.client.load('cardiacApi', 'v1',initTable, ROOT);
+    callback = function(){
+        gapi.client.load('cardiacApi', 'v1',signIn, ROOT);
+    }
+    gapi.client.load('oauth2', 'v2', callback); //callback loads the next api
 };
