@@ -1,5 +1,7 @@
 package com.appspot.cardiac_404.ECG;
 
+import com.appspot.cardiac_404.TimeBean;
+
 /**
  * Created by Alan on 10/6/2015.
  */
@@ -9,6 +11,7 @@ public class ECGBean {
     private boolean problemOne;
     private boolean problemTwo;
     private boolean problemThree;
+    private TimeBean time;
 
     public ECGBean() {
 
@@ -60,5 +63,13 @@ public class ECGBean {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public TimeBean getTime() {
+        return time;
+    }
+
+    public void setTime(TimeBean time) {
+        this.time = time;
     }
 }

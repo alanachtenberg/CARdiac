@@ -46,10 +46,11 @@ public class MainActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        preferences = getSharedPreferences(TAG,0);
+        preferences = getSharedPreferences(TAG, 0);
 
-        credentials = GoogleAccountCredential.usingAudience(this, "server:client_id:" + Constants.ANDROID_AUDIENCE);
-        setAccountName(preferences.getString(PREF_ACCOUNT_NAME, null));
+        credentials = GoogleAccountCredential.usingAudience(this, "server:client_id:" + Constants.WEB_CLIENT_ID);
+        String accountName = preferences.getString(PREF_ACCOUNT_NAME, null);
+        setAccountName(accountName);
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
 

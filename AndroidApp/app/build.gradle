@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
         applicationId "com.appspot.cadiac_404.androidapp"
@@ -12,59 +12,54 @@ android {
         versionName "1.0"
     }
     buildTypes {
+        debug {
+            multiDexEnabled true
+            //must be enabled, to allow support for more than ~65,000 references in a project
+        }
         release {
             minifyEnabled true//helps minify number of references in the build
-            multiDexEnabled true//must be enabled, to allow support for more than ~65,000 references in a project
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            multiDexEnabled true
+            //must be enabled, to allow support for more than ~65,000 references in a project
+            /*proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'*///proguard was obfuscating classes necessary for google authentication
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:support-v4:23.0.1'
     compile project(path: ':server', configuration: 'android-endpoints')
     compile 'com.android.support:multidex:1.0.1'
-
-    compile 'com.android.support:appcompat-v7:23.0.1'
-
     // BEGIN Google APIs
-
     // The following lines implement maven imports as defined at:
     // https://code.google.com/p/google-api-java-client/wiki/Setup
-
     // Add the Google API client library.
-    compile(group: 'com.google.api-client', name: 'google-api-client', version: '1.18.0-rc') {
+    compile('com.google.api-client:google-api-client:1.18.0-rc') {
         // Exclude artifacts that the Android SDK/Runtime provides.
         exclude(group: 'xpp3', module: 'xpp3')
         exclude(group: 'org.apache.httpcomponents', module: 'httpclient')
         exclude(group: 'junit', module: 'junit')
         exclude(group: 'com.google.android', module: 'android')
     }
-
     // Add the Android extensions for the Google API client library.
     // This will automatically include play services as long as you have download that library
     // from the Android SDK manager.
     // Add the Android extensions for the Google API client library.
-    compile(group: 'com.google.api-client', name: 'google-api-client-android',
-            version: '1.18.0-rc')
-            /*{
-                // Exclude play services, since we're not using this yet.
-                exclude(group: 'com.google.android.gms:play-services', module: 'google-play-services')
-            }*/
-
+    compile 'com.google.api-client:google-api-client-android:1.18.0-rc'
+    /*{
+                            // Exclude play services, since we're not using this yet.
+                            exclude(group: 'com.google.android.gms:play-services', module: 'google-play-services')
+                        }*/
     // END Google APIs
-
-
     // The following client libraries make HTTP/JSON on Android easier.
-
     // Android extensions for Google HTTP Client.
-    compile(group: 'com.google.http-client', name: 'google-http-client-android',
-            version: '1.18.0-rc') {
+    compile('com.google.http-client:google-http-client-android:1.18.0-rc') {
         exclude(group: 'com.google.android', module: 'android')
     }
-
     // This is used by the Google HTTP client library.
-    compile(group: 'com.google.guava', name: 'guava-jdk5', version: '17.0')
-
+    compile 'com.google.guava:guava-jdk5:17.0'
+    compile 'com.google.android.gms:play-services:8.1.0'
 }

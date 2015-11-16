@@ -83,17 +83,18 @@ public class DeveloperFragment extends Fragment {
                 popUp.setResponseCallbacks(new PopUpDialogFragment.PopUpDialogFragmentIterface() {
                     @Override
                     public void negativeResponse() {
-                        mOutputTextView.append("\nUser said they were NOT okay\n");
+
+                        mOutputTextView.setText("\nUser said they were NOT okay\n");
                     }
 
                     @Override
                     public void positiveResponse() {
-                        mOutputTextView.append("\nUser said they were okay\n");
+                        mOutputTextView.setText("\nUser said they were okay\n");
                     }
 
                     @Override
                     public void onTimeOut() {
-                        mOutputTextView.append("\nUser response timed out\n");
+                        mOutputTextView.setText("\nUser response timed out\n");
                     }
                 });
                 popUp.show(getFragmentManager(), "pop_up_dialog_fragment");
@@ -138,8 +139,8 @@ public class DeveloperFragment extends Fragment {
                     @Override
                     protected void onPostExecute(ECGBeanCollection ecgBeans) {
                         super.onPostExecute(ecgBeans);
-                        mOutputTextView.append("\nNew Response\n");
-                        mOutputTextView.append(ecgBeans.getItems().toString());
+                        mOutputTextView.setText("\nNew Response\n");
+                        mOutputTextView.setText(ecgBeans.getItems().toString());
                     }
                 };
                 listECGTask.execute();
