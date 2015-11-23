@@ -1,40 +1,57 @@
 package com.appspot.cardiac_404.ECG;
 
 import com.appspot.cardiac_404.CARdiacApiBase;
-import com.appspot.cardiac_404.TimeBean;
+import com.appspot.cardiac_404.User.CardiacUser;
 import com.google.api.server.spi.config.ApiMethod;
+import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.api.users.User;
+import com.googlecode.objectify.cmd.Query;
 
 import java.util.ArrayList;
+
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * Created by Alan on 9/25/2015.
  */
 
 public class EcgApi extends CARdiacApiBase {
-    private static ArrayList<ECGBean> ecgDataList = new ArrayList<ECGBean>();
-
-    static {
-        //test data
-        ECGBean bean = new ECGBean("TEST DATA", new TimeBean(), 123, true, false, false);
-        ecgDataList.add(bean);
-    }
 
     @ApiMethod(httpMethod = "post")
     public void insertECG(User user, ECGBean data) throws UnauthorizedException {
-        if (user==null || user.getEmail()==null){
-            throw new UnauthorizedException("user or email is null");
-        }
-        ecgDataList.add(data);
+        CardiacUser cardiacUser = loadUser(user);
+        cardiacUser.getEcgData().add(data);//insert ecg data
+        saveCardiacUser(cardiacUser); //save user to db
     }
 
     @ApiMethod(httpMethod = "get")
     public ArrayList<ECGBean> listECG(User user) throws UnauthorizedException {
-        if (user==null || user.getEmail()==null){
-            throw new UnauthorizedException("user or email is null");
+        return loadUser(user).getEcgData();
+    }
+
+    @ApiMethod(name = "listAllECG", httpMethod = "get")
+    public ArrayList<ArrayList<ECGBean>> listAllECG(User user) throws UnauthorizedException {
+        CardiacUser cardiacUser = loadUser(user);
+        if (!cardiacUser.isMonitor()){
+            throw new UnauthorizedException("User does not have monitor permissions");
         }
-        return ecgDataList;
+        ArrayList<ArrayList<ECGBean>> list = new ArrayList<ArrayList<ECGBean>>();
+        Query<CardiacUser> cUsers = ofy().load().type(CardiacUser.class);
+        for (CardiacUser cUser : cUsers){
+            list.add(cUser.getEcgData());
+        }
+        return list;
+    }
+
+    @ApiMethod(httpMethod = "delete")
+    public void deleteECG(User user, ECGBean ecgBean) throws UnauthorizedException, NotFoundException {
+        CardiacUser cardiacUser = loadUser(user);
+        if (!cardiacUser.getEcgData().contains(ecgBean)){
+            throw new NotFoundException("ECG data does not exist");
+        }
+        cardiacUser.getEcgData().remove(ecgBean);
+        saveCardiacUser(cardiacUser);//update user in db
     }
 
 }

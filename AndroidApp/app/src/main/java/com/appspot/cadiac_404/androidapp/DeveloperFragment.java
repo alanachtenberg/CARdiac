@@ -108,7 +108,6 @@ public class DeveloperFragment extends Fragment {
                     public void run() {
                         try {
                             ECGBean bean = new ECGBean();
-                            bean.setId("Android Developer Test");
                             bean.setHeartRate(100);
                             bean.setProblemOne(false);
                             bean.setProblemTwo(false);

@@ -11,6 +11,7 @@ import java.util.Calendar;
 import cardiac_404.appspot.com.cardiacApi.CardiacApi;
 import cardiac_404.appspot.com.cardiacApi.model.ECGBean;
 import cardiac_404.appspot.com.cardiacApi.model.ECGBeanCollection;
+import cardiac_404.appspot.com.cardiacApi.model.TimeBean;
 
 /**
  * Created by Alan on 10/18/2015.
@@ -21,7 +22,7 @@ public class ECGtest extends AndroidTestCase {
     String ROOT_URL = "https://cardiac-404.appspot.com/_ah/api/";
     String APP_NAME = "CARdiac";
     CardiacApi endpointApi;
-    String uniqueID;
+    TimeBean time = new TimeBean();
 
     Integer EXPECTED_HEART_RATE = 100;
     Boolean EXPECTED_PROB_1 = true;
@@ -45,9 +46,8 @@ public class ECGtest extends AndroidTestCase {
     }
 
     private void insertECG() throws IOException {
-        uniqueID = Calendar.getInstance().getTime().toString();
         ECGBean ecgObject = new ECGBean();
-        ecgObject.setId(uniqueID);
+        ecgObject.setTime(time);
         ecgObject.setHeartRate(EXPECTED_HEART_RATE);
         ecgObject.setProblemOne(EXPECTED_PROB_1);
         ecgObject.setProblemTwo(EXPECTED_PROB_2);
@@ -61,14 +61,14 @@ public class ECGtest extends AndroidTestCase {
         ECGBeanCollection ecgList = endpointApi.ecgApi().listECG().execute();
         ECGBean ecgObject = null;
         for (ECGBean bean : ecgList.getItems()) {
-            if (bean.getId()!=null && bean.getId().equals(uniqueID)) {
+            if (bean.getTime() != null && bean.getTime().equals(time)) {
                 ecgObject = bean;
             }
         }
         System.out.println("Retrieved ECG object");
         System.out.println(ecgObject.toPrettyString());
         assertNotNull(ecgObject);
-        assertEquals(uniqueID, ecgObject.getId());
+        assertEquals(time, ecgObject.getTime());
         assertEquals(EXPECTED_HEART_RATE, ecgObject.getHeartRate());
         assertEquals(EXPECTED_PROB_1, ecgObject.getProblemOne());
         assertEquals(EXPECTED_PROB_2, ecgObject.getProblemTwo());
