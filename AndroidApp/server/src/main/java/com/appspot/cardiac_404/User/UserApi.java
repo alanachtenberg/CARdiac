@@ -1,10 +1,19 @@
 package com.appspot.cardiac_404.User;
 
 import com.appspot.cardiac_404.CARdiacApiBase;
+import com.appspot.cardiac_404.MailService;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.response.ConflictException;
+import com.google.api.server.spi.response.InternalServerErrorException;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.api.users.User;
+
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
+import javax.mail.MessagingException;
 
 /**
  * Created by Alan on 11/22/2015.
@@ -12,7 +21,7 @@ import com.google.appengine.api.users.User;
 public class UserApi extends CARdiacApiBase {
 
     @ApiMethod(httpMethod = "post")
-    public void registerUser(User user) throws UnauthorizedException, ConflictException {
+    public void registerUser(User user) throws UnauthorizedException, ConflictException, InternalServerErrorException {
         try {
             loadUser(user);
             throw new ConflictException("user is already registered");
@@ -23,6 +32,16 @@ public class UserApi extends CARdiacApiBase {
             }else {
                 CardiacUser newUser = new CardiacUser(user);//copy data to custom class for use in datastore
                 saveCardiacUser(newUser);
+                try {
+                    MailService.sendConfirmation(user.getEmail());
+                } catch (MessagingException e1) {
+                    StringWriter msg = new StringWriter();
+                    PrintWriter writer = new PrintWriter(msg);
+                    writer.println("Failed to mail confirmation to "+user.getEmail());
+                    writer.println(e1.getMessage());
+                    e1.printStackTrace(writer);
+                    throw new InternalServerErrorException(msg.toString(), e1);
+                }
             }
         }
     }

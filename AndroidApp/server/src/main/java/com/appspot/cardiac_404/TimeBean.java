@@ -3,8 +3,11 @@ package com.appspot.cardiac_404;
 import com.googlecode.objectify.annotation.Subclass;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
+
+import javax.xml.crypto.Data;
 
 /**
  * Created by Alan on 10/30/2015.
@@ -12,17 +15,17 @@ import java.util.Date;
 
 @Subclass
 public class TimeBean implements Serializable{
-    private String time;
+    private Date time;
 
     public TimeBean(){
-        time = Calendar.getInstance().toString();
+        time = Calendar.getInstance().getTime();
     }
 
-    public String getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Date time) {
         this.time = time;
     }
     public void setTimeFromJson(){
