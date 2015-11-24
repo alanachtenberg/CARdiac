@@ -13,6 +13,11 @@ function loadECGdata(){
     var request = gapi.client.oauth2.userinfo.get().execute(function(resp) {
         if (!resp.code) {
                gapi.client.cardiacApi.ecgApi.listECG().execute(function(resp) {
+                   if (resp.code == 401){
+                        $(".alert").show();
+                   }else{
+                        $(".alert").hide();
+
                        resp.items = resp.items || [];
 
                        var ecgTable = $('#EcgDataTable').DataTable();
@@ -28,8 +33,9 @@ function loadECGdata(){
                                resp.items[i].problemThree ]
                                ).draw();
                        }
+                   }
                    } );
-                   setTimeout(function(){loadECGdata()},TIMEOUT);
+               setTimeout(function(){loadECGdata()},TIMEOUT);
         }else{
             signIn()
         }
