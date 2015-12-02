@@ -12,7 +12,7 @@ var EcgData = ["default",0,0,false,false,0];
 function loadECGdata(){
     var request = gapi.client.oauth2.userinfo.get().execute(function(resp) {
         if (!resp.code) {
-            var userName = resp.name;
+            var userName = resp.email;
                gapi.client.cardiacApi.ecgApi.listECG().execute(function(resp) {
                    if (resp.code == 401){
                         $(".alert").show();
@@ -30,7 +30,7 @@ function loadECGdata(){
                                [ userName,
                                resp.items[i].time.time,
                                resp.items[i].time.latitude,
-                               resp.items[i].time.longitude
+                               resp.items[i].time.longitude,
                                resp.items[i].heartRate,
                                resp.items[i].missedBeat,
                                resp.items[i].lowVoltPeak,
@@ -41,7 +41,7 @@ function loadECGdata(){
                    }
                    } );
 
-               gapi.client.cardiacApi.ecgApi.listECG().execute(function(resp) {
+               gapi.client.cardiacApi.vehicleApi.listVehicle().execute(function(resp) {
                                   if (resp.code == 401){
                                        $(".alert").show();
                                   }else{
@@ -49,20 +49,18 @@ function loadECGdata(){
 
                                       resp.items = resp.items || [];
 
-                                      var ecgTable = $('#EcgDataTable').DataTable();
-                                      if (ecgTable.data().length > 0){
-                                          ecgTable.clear().draw();
+                                      var vehicleTable = $('#VehicleDataTable').DataTable();
+                                      if (vehicleTable.data().length > 0){
+                                          vehicleTable.clear().draw();
                                       }
                                       for (var i = 0; i < resp.items.length; i++) {
-                                          ecgTable.row.add(
+                                          vehicleTable.row.add(
                                               [ userName,
                                               resp.items[i].time.time,
                                               resp.items[i].time.latitude,
-                                              resp.items[i].time.longitude
-                                              resp.items[i].heartRate,
-                                              resp.items[i].missedBeat,
-                                              resp.items[i].lowVoltPeak,
-                                              resp.items[i].lowVoltValue,
+                                              resp.items[i].time.longitude,
+                                              resp.items[i].velocity,
+                                              resp.items[i].collision,
                                               ]
                                               ).draw();
                                       }

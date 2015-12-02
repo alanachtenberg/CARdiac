@@ -8,6 +8,7 @@ import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.api.users.User;
 import com.googlecode.objectify.cmd.Query;
+
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.ArrayList;
@@ -19,13 +20,13 @@ public class VehicleApi extends CARdiacApiBase {
 
     @ApiMethod(httpMethod = "get")
     public TimeLocBean test(User user) throws UnauthorizedException {
-        if (user == null || user.getEmail()==null)
+        if (user == null || user.getEmail() == null)
             throw new UnauthorizedException("null or unauthorized user");
         return new TimeLocBean();
     }
 
 
-    @ApiMethod(httpMethod = "post")
+    @ApiMethod(httpMethod = "post", path = "insertVehicle")
     public void insertVehicle(User user, VehicleBean data) throws UnauthorizedException {
         CardiacUser cardiacUser = loadUser(user);
         cardiacUser.getVehicleData().add(data);//insert vehicle data
@@ -37,24 +38,24 @@ public class VehicleApi extends CARdiacApiBase {
         return loadUser(user).getVehicleData();
     }
 
-    @ApiMethod(name = "listAllVehicle", httpMethod = "get")
+    @ApiMethod(name = "listAllVehicle", path = "listAllVehicle", httpMethod = "get")
     public ArrayList<ArrayList<VehicleBean>> listAllVehicle(User user) throws UnauthorizedException {
         CardiacUser cardiacUser = loadUser(user);
-        if (!cardiacUser.isMonitor()){
+        if (!cardiacUser.isMonitor()) {
             throw new UnauthorizedException("User does not have monitor permissions");
         }
         ArrayList<ArrayList<VehicleBean>> list = new ArrayList<ArrayList<VehicleBean>>();
         Query<CardiacUser> cUsers = ofy().load().type(CardiacUser.class);
-        for (CardiacUser cUser : cUsers){
+        for (CardiacUser cUser : cUsers) {
             list.add(cUser.getVehicleData());
         }
         return list;
     }
 
-    @ApiMethod(httpMethod = "delete")
+    @ApiMethod(httpMethod = "delete", path = "deleteVehicle")
     public void deleteVehicle(User user, VehicleBean vehicleBean) throws UnauthorizedException, NotFoundException {
         CardiacUser cardiacUser = loadUser(user);
-        if (!cardiacUser.getVehicleData().contains(vehicleBean)){
+        if (!cardiacUser.getVehicleData().contains(vehicleBean)) {
             throw new NotFoundException("Vehicle data does not exist");
         }
         cardiacUser.getVehicleData().remove(vehicleBean);
