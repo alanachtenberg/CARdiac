@@ -6,12 +6,11 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
 import java.io.IOException;
-import java.util.Calendar;
 
 import cardiac_404.appspot.com.cardiacApi.CardiacApi;
 import cardiac_404.appspot.com.cardiacApi.model.ECGBean;
 import cardiac_404.appspot.com.cardiacApi.model.ECGBeanCollection;
-import cardiac_404.appspot.com.cardiacApi.model.TimeBean;
+import cardiac_404.appspot.com.cardiacApi.model.TimeLocBean;
 
 /**
  * Created by Alan on 10/18/2015.
@@ -22,7 +21,7 @@ public class ECGtest extends AndroidTestCase {
     String ROOT_URL = "https://cardiac-404.appspot.com/_ah/api/";
     String APP_NAME = "CARdiac";
     CardiacApi endpointApi;
-    TimeBean time = new TimeBean();
+    TimeLocBean time = new TimeLocBean();
 
     Float EXPECTED_HEART_RATE = 100f;
     Boolean EXPECTED_1 = true;

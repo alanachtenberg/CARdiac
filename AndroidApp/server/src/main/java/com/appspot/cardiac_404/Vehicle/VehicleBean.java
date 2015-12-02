@@ -1,6 +1,6 @@
 package com.appspot.cardiac_404.Vehicle;
 
-import com.appspot.cardiac_404.TimeBean;
+import com.appspot.cardiac_404.TimeLocBean;
 
 /**
  * Created by Alan on 10/31/2015.
@@ -9,7 +9,7 @@ public class VehicleBean {
 
     private boolean collision;
     private float velocity;
-    private TimeBean time;
+    private TimeLocBean time;
 
     public Boolean getCollision() {
         return collision;
@@ -28,11 +28,11 @@ public class VehicleBean {
     }
 
 
-    public TimeBean getTime() {
+    public TimeLocBean getTime() {
         return time;
     }
 
-    public void setTime(TimeBean time) {
+    public void setTime(TimeLocBean time) {
         this.time = time;
     }
 }

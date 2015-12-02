@@ -1,7 +1,7 @@
 package com.appspot.cardiac_404.User;
 
 import com.appspot.cardiac_404.ECG.ECGBean;
-import com.appspot.cardiac_404.TimeBean;
+import com.appspot.cardiac_404.TimeLocBean;
 import com.google.appengine.api.users.User;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -30,7 +30,7 @@ public class CardiacUser {
         email = user.getEmail();
         monitor = false;
         ecgData = new ArrayList<ECGBean>();
-        ecgData.add(new ECGBean(new TimeBean(),-1,false,false,0));
+        ecgData.add(new ECGBean(new TimeLocBean(),-1,false,false,0));
     }
 
     public String getId() {

@@ -1,6 +1,9 @@
 package com.appspot.cadiac_404.androidapp;
 
 import android.app.Fragment;
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -72,6 +75,7 @@ public class DeveloperFragment extends Fragment {
         return mView;
     }
 
+
     private void setUpButtons() {
         mPopUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,8 +87,10 @@ public class DeveloperFragment extends Fragment {
                 popUp.setResponseCallbacks(new PopUpDialogFragment.PopUpDialogFragmentIterface() {
                     @Override
                     public void negativeResponse() {
-
-                        mOutputTextView.setText("\nUser said they were NOT okay\n");
+                        String locationProvider = LocationManager.NETWORK_PROVIDER;
+                        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+                        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+                        mOutputTextView.setText("\nUser said they were NOT okay "+ lastKnownLocation.toString() +"\n");
                     }
 
                     @Override

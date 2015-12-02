@@ -1,6 +1,6 @@
 package com.appspot.cardiac_404.ECG;
 
-import com.appspot.cardiac_404.TimeBean;
+import com.appspot.cardiac_404.TimeLocBean;
 import com.googlecode.objectify.annotation.Subclass;
 
 import java.io.Serializable;
@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 @Subclass
 public class ECGBean implements Serializable{
-    private TimeBean time;
+    private TimeLocBean time;
     private float heartRate;
     private boolean missedBeat;
     private boolean lowVoltPeak;
@@ -21,7 +21,7 @@ public class ECGBean implements Serializable{
 
     }
 
-    public ECGBean( TimeBean time, float heartRate, boolean missedBeat, boolean lowVoltPeak, float lowVoltValue) {
+    public ECGBean( TimeLocBean time, float heartRate, boolean missedBeat, boolean lowVoltPeak, float lowVoltValue) {
         this.time = time;
         this.heartRate = heartRate;
         this.missedBeat = missedBeat;
@@ -29,11 +29,11 @@ public class ECGBean implements Serializable{
         this.lowVoltValue = lowVoltValue;
     }
 
-    public TimeBean getTime() {
+    public TimeLocBean getTime() {
         return time;
     }
 
-    public void setTime(TimeBean time) {
+    public void setTime(TimeLocBean time) {
         this.time = time;
     }
 
