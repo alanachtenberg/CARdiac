@@ -12,16 +12,16 @@ import java.io.Serializable;
 @Subclass
 public class ECGBean implements Serializable{
     private TimeLocBean time;
-    private float heartRate;
+    private double heartRate;
     private boolean missedBeat;
     private boolean lowVoltPeak;
-    private float lowVoltValue;
+    private double lowVoltValue;
 
     public ECGBean() {
 
     }
 
-    public ECGBean( TimeLocBean time, float heartRate, boolean missedBeat, boolean lowVoltPeak, float lowVoltValue) {
+    public ECGBean( TimeLocBean time, double heartRate, boolean missedBeat, boolean lowVoltPeak, double lowVoltValue) {
         this.time = time;
         this.heartRate = heartRate;
         this.missedBeat = missedBeat;
@@ -37,11 +37,11 @@ public class ECGBean implements Serializable{
         this.time = time;
     }
 
-    public float getHeartRate() {
+    public double getHeartRate() {
         return heartRate;
     }
 
-    public void setHeartRate(float heartRate) {
+    public void setHeartRate(double heartRate) {
         this.heartRate = heartRate;
     }
 
@@ -61,11 +61,11 @@ public class ECGBean implements Serializable{
         this.lowVoltPeak = lowVoltPeak;
     }
 
-    public float getLowVoltValue() {
+    public double getLowVoltValue() {
         return lowVoltValue;
     }
 
-    public void setLowVoltValue(float lowVoltValue) {
+    public void setLowVoltValue(double lowVoltValue) {
         this.lowVoltValue = lowVoltValue;
     }
 }

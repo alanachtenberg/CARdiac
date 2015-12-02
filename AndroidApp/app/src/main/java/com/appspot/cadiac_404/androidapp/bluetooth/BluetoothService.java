@@ -8,11 +8,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.ParcelUuid;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.appspot.cadiac_404.androidapp.MainActivity;
+import com.appspot.cadiac_404.androidapp.popup.PopUpDialogFragment;
 
 import java.io.IOException;
 import java.util.Set;
@@ -105,7 +111,22 @@ public class BluetoothService extends Service {
 
     private void attemptConnection() throws InterruptedException, IOException {
         try {
-            btCommThread = new BtCommThread(targetDevice, mCallbacks);
+            btCommThread = new BtCommThread(targetDevice, new BluetoothInterface() {
+                @Override
+                public void handleReceivedMessages(String jsonString) {
+                    Log.e(LOGGER_TAG,"DEFAULT HANDLER NOT MEANT TO BE USED");
+                }
+
+                @Override
+                public void logMessage(String message) {
+                    Log.e(LOGGER_TAG,"DEFAULT HANDLER NOT MEANT TO BE USED");
+                }
+
+                @Override
+                public void logError(String message) {
+                    Log.e(LOGGER_TAG,"DEFAULT HANDLER NOT MEANT TO BE USED");
+                }
+            });
             btCommThread.start();//start connection thread
         } catch (IOException e) {
             if (tryCount < NUM_RETRIES) {
@@ -190,25 +211,6 @@ public class BluetoothService extends Service {
                 }
             }
         }
-    };
-
-    BluetoothInterface mCallbacks = new BluetoothInterface() {
-        @Override
-        public void handleReceivedMessages(String jsonString) {
-            //TODO parse received json object
-            Log.i(LOGGER_TAG, jsonString);
-        }
-
-        @Override
-        public void logMessage(String message) {
-            Log.d(LOGGER_TAG, message);
-        }
-
-        @Override
-        public void logError(String message) {
-            Log.e(LOGGER_TAG, message);
-        }
-
     };
 
     public void sendMessage(String message) {

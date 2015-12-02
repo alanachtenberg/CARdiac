@@ -23,10 +23,10 @@ public class ECGtest extends AndroidTestCase {
     CardiacApi endpointApi;
     TimeLocBean time = new TimeLocBean();
 
-    Float EXPECTED_HEART_RATE = 100f;
+    Double EXPECTED_HEART_RATE = 100d;
     Boolean EXPECTED_1 = true;
     Boolean EXPECTED_2 = true;
-    Float EXPECTED_3 = 0f;
+    Double EXPECTED_3 = 0d;
 
 
     @Override
