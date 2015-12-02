@@ -108,10 +108,10 @@ public class DeveloperFragment extends Fragment {
                     public void run() {
                         try {
                             ECGBean bean = new ECGBean();
-                            bean.setHeartRate(100);
-                            bean.setProblemOne(false);
-                            bean.setProblemTwo(false);
-                            bean.setProblemThree(true);
+                            bean.setHeartRate(100f);
+                            bean.setMissedBeat(false);
+                            bean.setLowVoltPeak(false);
+                            bean.setLowVoltValue(0f);
                             endpointsApi.ecgApi().insertECG(bean).execute();
                         } catch (IOException e) {
                             e.printStackTrace();

@@ -30,7 +30,7 @@ public class CardiacUser {
         email = user.getEmail();
         monitor = false;
         ecgData = new ArrayList<ECGBean>();
-        ecgData.add(new ECGBean(new TimeBean(),-1,false,false,false));
+        ecgData.add(new ECGBean(new TimeBean(),-1,false,false,0));
     }
 
     public String getId() {

@@ -24,10 +24,10 @@ public class ECGtest extends AndroidTestCase {
     CardiacApi endpointApi;
     TimeBean time = new TimeBean();
 
-    Integer EXPECTED_HEART_RATE = 100;
-    Boolean EXPECTED_PROB_1 = true;
-    Boolean EXPECTED_PROB_2 = true;
-    Boolean EXPECTED_PROB_3 = false;
+    Float EXPECTED_HEART_RATE = 100f;
+    Boolean EXPECTED_1 = true;
+    Boolean EXPECTED_2 = true;
+    Float EXPECTED_3 = 0f;
 
 
     @Override
@@ -49,9 +49,9 @@ public class ECGtest extends AndroidTestCase {
         ECGBean ecgObject = new ECGBean();
         ecgObject.setTime(time);
         ecgObject.setHeartRate(EXPECTED_HEART_RATE);
-        ecgObject.setProblemOne(EXPECTED_PROB_1);
-        ecgObject.setProblemTwo(EXPECTED_PROB_2);
-        ecgObject.setProblemThree(EXPECTED_PROB_3);
+        ecgObject.setMissedBeat(EXPECTED_1);
+        ecgObject.setLowVoltPeak(EXPECTED_2);
+        ecgObject.setLowVoltValue(EXPECTED_3);
         endpointApi.ecgApi().insertECG(ecgObject).execute();
         System.out.println("Inserting ECG object");
         System.out.println(ecgObject.toPrettyString());
@@ -70,9 +70,8 @@ public class ECGtest extends AndroidTestCase {
         assertNotNull(ecgObject);
         assertEquals(time, ecgObject.getTime());
         assertEquals(EXPECTED_HEART_RATE, ecgObject.getHeartRate());
-        assertEquals(EXPECTED_PROB_1, ecgObject.getProblemOne());
-        assertEquals(EXPECTED_PROB_2, ecgObject.getProblemTwo());
-        assertEquals(EXPECTED_PROB_3, ecgObject.getProblemThree());
-
+        assertEquals(EXPECTED_1, ecgObject.getMissedBeat());
+        assertEquals(EXPECTED_2, ecgObject.getLowVoltPeak());
+        assertEquals(EXPECTED_3, ecgObject.getLowVoltValue());
     }
 }

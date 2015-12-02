@@ -12,21 +12,21 @@ import java.io.Serializable;
 @Subclass
 public class ECGBean implements Serializable{
     private TimeBean time;
-    private int heartRate;
-    private boolean problemOne;
-    private boolean problemTwo;
-    private boolean problemThree;
+    private float heartRate;
+    private boolean missedBeat;
+    private boolean lowVoltPeak;
+    private float lowVoltValue;
 
     public ECGBean() {
 
     }
 
-    public ECGBean( TimeBean time, int heartRate, boolean problemOne, boolean problemTwo, boolean problemThree) {
+    public ECGBean( TimeBean time, float heartRate, boolean missedBeat, boolean lowVoltPeak, float lowVoltValue) {
         this.time = time;
         this.heartRate = heartRate;
-        this.problemOne = problemOne;
-        this.problemTwo = problemTwo;
-        this.problemThree = problemThree;
+        this.missedBeat = missedBeat;
+        this.lowVoltPeak = lowVoltPeak;
+        this.lowVoltValue = lowVoltValue;
     }
 
     public TimeBean getTime() {
@@ -37,37 +37,35 @@ public class ECGBean implements Serializable{
         this.time = time;
     }
 
-    public int getHeartRate() {
+    public float getHeartRate() {
         return heartRate;
     }
 
-    public void setHeartRate(int heartRate) {
+    public void setHeartRate(float heartRate) {
         this.heartRate = heartRate;
     }
 
-    public boolean isProblemOne() {
-        return problemOne;
+    public boolean getMissedBeat() {
+        return missedBeat;
     }
 
-    public void setProblemOne(boolean problemOne) {
-        this.problemOne = problemOne;
+    public void setMissedBeat(boolean missedBeat) {
+        this.missedBeat = missedBeat;
     }
 
-    public boolean isProblemTwo() {
-        return problemTwo;
+    public boolean isLowVoltPeak() {
+        return lowVoltPeak;
     }
 
-    public void setProblemTwo(boolean problemTwo) {
-        this.problemTwo = problemTwo;
+    public void setLowVoltPeak(boolean lowVoltPeak) {
+        this.lowVoltPeak = lowVoltPeak;
     }
 
-    public boolean isProblemThree() {
-        return problemThree;
+    public float getLowVoltValue() {
+        return lowVoltValue;
     }
 
-    public void setProblemThree(boolean problemThree) {
-        this.problemThree = problemThree;
+    public void setLowVoltValue(float lowVoltValue) {
+        this.lowVoltValue = lowVoltValue;
     }
-
-
 }

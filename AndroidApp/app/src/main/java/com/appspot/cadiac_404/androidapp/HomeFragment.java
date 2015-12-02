@@ -52,9 +52,6 @@ public class HomeFragment extends Fragment {
         connectBlueToothButton = (Button) view.findViewById(R.id.connect_bluetooth_button);
         connectBlueToothButton.setOnClickListener(connectBlueToothListener);
 
-        connectServerButton = (Button) view.findViewById(R.id.connect_server_button);
-        connectServerButton.setOnClickListener(connectServerListener);
-
         return view;
     }
 
@@ -74,20 +71,11 @@ public class HomeFragment extends Fragment {
             }
         }
     };
-    private View.OnClickListener connectServerListener= new View.OnClickListener(){
-        @Override
-        public void onClick(View v){
-            StartTcpService();
-        }
-    };
 
     public void StartBluetoothService(){
         getActivity().startService(new Intent(getActivity(),BluetoothService.class));
     }
 
-    public void StartTcpService(){
-        getActivity().startService(new Intent(getActivity(),TcpService.class));
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

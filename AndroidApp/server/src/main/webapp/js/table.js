@@ -7,11 +7,12 @@ var SCOPES =  'https://www.googleapis.com/auth/userinfo.email';
 
 
 var TIMEOUT = 10000;
-var EcgData = ["default",0,false,false,false];
+var EcgData = ["default",0,0,false,false,0];
 
 function loadECGdata(){
     var request = gapi.client.oauth2.userinfo.get().execute(function(resp) {
         if (!resp.code) {
+            var userName = resp.name;
                gapi.client.cardiacApi.ecgApi.listECG().execute(function(resp) {
                    if (resp.code == 401){
                         $(".alert").show();
@@ -26,11 +27,12 @@ function loadECGdata(){
                        }
                        for (var i = 0; i < resp.items.length; i++) {
                            ecgTable.row.add(
-                               [ resp.items[i].id,
+                               [ userName,
+                               resp.items[i].time.time,
                                resp.items[i].heartRate,
-                               resp.items[i].problemOne,
-                               resp.items[i].problemTwo,
-                               resp.items[i].problemThree ]
+                               resp.items[i].missedBeat,
+                               resp.items[i].lowVoltPeak,
+                               resp.items[i].lowVoltValue ]
                                ).draw();
                        }
                    }
@@ -47,7 +49,7 @@ $('#ReloadEcgButton').click(loadECGdata);
 
 initTable = function(){
     var apiTable=$('#EcgDataTable').DataTable();
-    apiTable.row.add(EcgData).draw();
+//    apiTable.row.add(EcgData).draw();
     setTimeout(loadECGdata(), TIMEOUT);
 };
 /**
