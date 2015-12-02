@@ -11,6 +11,16 @@ public class VehicleBean {
     private float velocity;
     private TimeLocBean time;
 
+    public VehicleBean() {
+
+    }
+
+    public VehicleBean(TimeLocBean time, boolean collision, float velocity) {
+        this.collision = collision;
+        this.velocity = velocity;
+        this.time = time;
+    }
+
     public Boolean getCollision() {
         return collision;
     }

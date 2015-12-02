@@ -1,11 +1,8 @@
 package com.appspot.cardiac_404;
 
-import com.appspot.cardiac_404.ECG.ECGBean;
 import com.appspot.cardiac_404.User.CardiacUser;
 import com.google.api.server.spi.config.Api;
-import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
-import com.google.api.server.spi.response.ConflictException;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.api.users.User;
 import com.googlecode.objectify.ObjectifyService;

@@ -2,6 +2,7 @@ package com.appspot.cardiac_404.User;
 
 import com.appspot.cardiac_404.ECG.ECGBean;
 import com.appspot.cardiac_404.TimeLocBean;
+import com.appspot.cardiac_404.Vehicle.VehicleBean;
 import com.google.appengine.api.users.User;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -20,8 +21,9 @@ public class CardiacUser {
     private Boolean monitor;//monitoring permissions
 
     private ArrayList<ECGBean> ecgData;
+    private ArrayList<VehicleBean> vehicleData;
 
-    public CardiacUser(){
+    public CardiacUser() {
 
     }
 
@@ -30,7 +32,9 @@ public class CardiacUser {
         email = user.getEmail();
         monitor = false;
         ecgData = new ArrayList<ECGBean>();
-        ecgData.add(new ECGBean(new TimeLocBean(),-1,false,false,0));
+        vehicleData = new ArrayList<VehicleBean>();
+        ecgData.add(new ECGBean(new TimeLocBean(), -1, false, false, 0));
+        vehicleData.add(new VehicleBean(new TimeLocBean(), false, -1f));
     }
 
     public String getId() {
@@ -43,6 +47,10 @@ public class CardiacUser {
 
     public ArrayList<ECGBean> getEcgData() {
         return ecgData;
+    }
+
+    public ArrayList<VehicleBean> getVehicleData() {
+        return vehicleData;
     }
 
     public Boolean isMonitor() {

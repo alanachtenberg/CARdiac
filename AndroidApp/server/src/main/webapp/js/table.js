@@ -29,14 +29,45 @@ function loadECGdata(){
                            ecgTable.row.add(
                                [ userName,
                                resp.items[i].time.time,
+                               resp.items[i].time.latitude,
+                               resp.items[i].time.longitude
                                resp.items[i].heartRate,
                                resp.items[i].missedBeat,
                                resp.items[i].lowVoltPeak,
-                               resp.items[i].lowVoltValue ]
+                               resp.items[i].lowVoltValue,
+                               ]
                                ).draw();
                        }
                    }
                    } );
+
+               gapi.client.cardiacApi.ecgApi.listECG().execute(function(resp) {
+                                  if (resp.code == 401){
+                                       $(".alert").show();
+                                  }else{
+                                       $(".alert").hide();
+
+                                      resp.items = resp.items || [];
+
+                                      var ecgTable = $('#EcgDataTable').DataTable();
+                                      if (ecgTable.data().length > 0){
+                                          ecgTable.clear().draw();
+                                      }
+                                      for (var i = 0; i < resp.items.length; i++) {
+                                          ecgTable.row.add(
+                                              [ userName,
+                                              resp.items[i].time.time,
+                                              resp.items[i].time.latitude,
+                                              resp.items[i].time.longitude
+                                              resp.items[i].heartRate,
+                                              resp.items[i].missedBeat,
+                                              resp.items[i].lowVoltPeak,
+                                              resp.items[i].lowVoltValue,
+                                              ]
+                                              ).draw();
+                                      }
+                                  }
+                                  } );
                setTimeout(function(){loadECGdata()},TIMEOUT);
         }else{
             signIn()
@@ -48,8 +79,8 @@ function loadECGdata(){
 $('#ReloadEcgButton').click(loadECGdata);
 
 initTable = function(){
-    var apiTable=$('#EcgDataTable').DataTable();
-//    apiTable.row.add(EcgData).draw();
+    var ecgTable=$('#EcgDataTable').DataTable();
+    var vehicleTable=$('#VehicleDataTable').DataTable();
     setTimeout(loadECGdata(), TIMEOUT);
 };
 /**
