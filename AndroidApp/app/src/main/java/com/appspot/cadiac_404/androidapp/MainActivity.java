@@ -20,7 +20,8 @@ public class MainActivity extends Activity
     static final String PREF_ACCOUNT_NAME = "accountName";
     static final int REQUEST_ACCOUNT_PICKER = 1;
 
-    GoogleAccountCredential credentials;
+    static GoogleAccountCredential credentials;
+    public static ApiCaller apiCaller;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -36,6 +37,7 @@ public class MainActivity extends Activity
                     String accountName = data.getExtras().getString(AccountManager.KEY_ACCOUNT_NAME);
                     if (accountName != null) {
                         setAccountName(accountName);
+                        apiCaller = new ApiCaller(credentials);
                     }
                 }
         }

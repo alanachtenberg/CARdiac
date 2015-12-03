@@ -8,14 +8,14 @@ import com.appspot.cardiac_404.TimeLocBean;
 public class VehicleBean {
 
     private boolean collision;
-    private float velocity;
+    private double velocity;
     private TimeLocBean time;
 
     public VehicleBean() {
 
     }
 
-    public VehicleBean(TimeLocBean time, boolean collision, float velocity) {
+    public VehicleBean(TimeLocBean time, boolean collision, double velocity) {
         this.collision = collision;
         this.velocity = velocity;
         this.time = time;
@@ -29,11 +29,11 @@ public class VehicleBean {
         this.collision = collision;
     }
 
-    public float getVelocity() {
+    public double getVelocity() {
         return velocity;
     }
 
-    public void setVelocity(float velocity) {
+    public void setVelocity(double velocity) {
         this.velocity = velocity;
     }
 

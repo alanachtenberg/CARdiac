@@ -56,9 +56,18 @@ public class CommandParser {
         return bean;
     }
     public static VehicleBean parseVehicleString(String jsonString){
-        VehicleBean bean = null;
+        VehicleBean bean = new VehicleBean();
         JSONObject jsonObject;
-
+        try {
+            jsonObject = new JSONObject(jsonString);
+            Boolean collision = jsonObject.getBoolean("COLLISION");
+            Double velocity = jsonObject.getDouble("VELOCITY");
+            bean.setCollision(collision);
+            bean.setVelocity(velocity);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
         return bean;
     }
 }

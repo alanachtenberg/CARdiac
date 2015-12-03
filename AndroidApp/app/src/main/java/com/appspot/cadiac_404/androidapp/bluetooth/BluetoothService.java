@@ -10,19 +10,26 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.os.ParcelUuid;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.appspot.cadiac_404.androidapp.ApiCaller;
 import com.appspot.cadiac_404.androidapp.MainActivity;
-import com.appspot.cadiac_404.androidapp.popup.PopUpDialogFragment;
+import com.google.api.client.util.DateTime;
+
+import com.appspot.cadiac_404.androidapp.CommandParser;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Set;
 import java.util.UUID;
+
+import cardiac_404.appspot.com.cardiacApi.model.ECGBean;
+import cardiac_404.appspot.com.cardiacApi.model.TimeLocBean;
+import cardiac_404.appspot.com.cardiacApi.model.VehicleBean;
 
 public class BluetoothService extends Service {
     public static UUID uuid = UUID.fromString("1afe39b3-2c5c-4bf4-a2c2-267ee767fd9d");
@@ -35,6 +42,7 @@ public class BluetoothService extends Service {
     private Boolean targetDevicePaired = false;
     private BluetoothDevice targetDevice;
     private BtCommThread btCommThread;
+    private Service thisService;
 
     public BluetoothService() {
     }
@@ -60,6 +68,7 @@ public class BluetoothService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        thisService = this;
         tryCount = 0;
         if (btCommThread == null) {
             Toast.makeText(this, "BluetoothComm Service Started", Toast.LENGTH_SHORT).show();
@@ -111,22 +120,7 @@ public class BluetoothService extends Service {
 
     private void attemptConnection() throws InterruptedException, IOException {
         try {
-            btCommThread = new BtCommThread(targetDevice, new BluetoothInterface() {
-                @Override
-                public void handleReceivedMessages(String jsonString) {
-                    Log.e(LOGGER_TAG,"DEFAULT HANDLER NOT MEANT TO BE USED");
-                }
-
-                @Override
-                public void logMessage(String message) {
-                    Log.e(LOGGER_TAG,"DEFAULT HANDLER NOT MEANT TO BE USED");
-                }
-
-                @Override
-                public void logError(String message) {
-                    Log.e(LOGGER_TAG,"DEFAULT HANDLER NOT MEANT TO BE USED");
-                }
-            });
+            btCommThread = new BtCommThread(targetDevice, mCallbacks);
             btCommThread.start();//start connection thread
         } catch (IOException e) {
             if (tryCount < NUM_RETRIES) {
@@ -234,6 +228,74 @@ public class BluetoothService extends Service {
             btCommThread.setCallbacks(callbacks);
         }
     }
+
+    private Location getLocation() {
+        String locationProvider = LocationManager.NETWORK_PROVIDER;
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+        return lastKnownLocation;
+    }
+
+    private TimeLocBean createTimeBean() {
+        TimeLocBean bean = new TimeLocBean();
+        Location location = getLocation();
+        bean.setLatitude(location.getLatitude());
+        bean.setLongitude(location.getLongitude());
+        DateTime now = new DateTime(Calendar.getInstance().getTimeInMillis());
+        bean.setTime(now);
+        return bean;
+    }
+
+    private void showText(String text){
+        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+    }
+
+
+    private BluetoothInterface mCallbacks = new BluetoothInterface() {
+        @Override
+        public void handleReceivedMessages(String jsonString) {
+            CommandParser.TYPE type = CommandParser.parseCommand(jsonString);
+            switch (type) {
+                case ECG:
+                    ECGBean ecgBean = CommandParser.parseECGString(jsonString);
+                    ecgBean.setTime(createTimeBean());
+                    //showText("Sending data to Ecg API");
+                    try {
+                        Log.i(LOGGER_TAG,"Sending data to ECG API");
+                        Log.i(LOGGER_TAG,ecgBean.toPrettyString());
+                        MainActivity.apiCaller.insertEcg(ecgBean);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case VEHICLE:
+                    VehicleBean vehicleBean = CommandParser.parseVehicleString(jsonString);
+                    vehicleBean.setTime(createTimeBean());
+                    //showText("Sending data to Vehicle API");
+                    try {
+                        Log.i(LOGGER_TAG,"Sending data to ECG API");
+                        Log.i(LOGGER_TAG,vehicleBean.toPrettyString());
+                        MainActivity.apiCaller.insertVehicle(vehicleBean);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case UNKNOWN:
+                    throw new IllegalStateException("unknown  command type");
+            }
+
+        }
+
+        @Override
+        public void logMessage(String message) {
+            Log.i(LOGGER_TAG, message);
+        }
+
+        @Override
+        public void logError(String message) {
+            Log.e(LOGGER_TAG, message);
+        }
+    };
 
 
 }
