@@ -8,8 +8,6 @@ import java.io.Serializable;
 /**
  * Created by Alan on 10/6/2015.
  */
-
-@Subclass
 public class ECGBean implements Serializable{
     private TimeLocBean time;
     private double heartRate;

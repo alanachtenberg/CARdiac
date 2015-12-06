@@ -16,7 +16,6 @@ import java.util.ArrayList;
 @Entity
 public class CardiacUser {
     @Id
-    private String id;
     private String email;
     private Boolean monitor;//monitoring permissions
 
@@ -28,17 +27,12 @@ public class CardiacUser {
     }
 
     public CardiacUser(User user) {
-        id = user.getUserId();
         email = user.getEmail();
         monitor = false;
         ecgData = new ArrayList<ECGBean>();
         vehicleData = new ArrayList<VehicleBean>();
         ecgData.add(new ECGBean(new TimeLocBean(), -1, false, false, 0));
         vehicleData.add(new VehicleBean(new TimeLocBean(), false, -1f));
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getEmail() {

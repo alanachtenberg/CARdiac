@@ -16,7 +16,9 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
         version = Constants.VERSION,
         namespace = @ApiNamespace(ownerDomain = Constants.DOMAIN, ownerName = Constants.DOMAIN,
                 packagePath = ""),
-        clientIds = {Constants.WEB_CLIENT_ID, Constants.API_EXPLORER_CLIENT_ID, Constants.ANDROID_CLIENT_ID})
+        clientIds = {Constants.WEB_CLIENT_ID, Constants.API_EXPLORER_CLIENT_ID, Constants.ANDROID_CLIENT_ID, Constants.ANDROID_CLIENT_ID},
+        audiences = {Constants.ANDROID_AUDIENCE}
+)
 public abstract class CARdiacApiBase {
 
     public CARdiacApiBase() {
@@ -24,11 +26,12 @@ public abstract class CARdiacApiBase {
     }
 
     protected CardiacUser loadUser(User user) throws UnauthorizedException {
-        if (user==null || user.getEmail()==null){
+        if (user == null || user.getEmail() == null) {
             throw new UnauthorizedException("user or email is null", new NullPointerException());
         }
-        CardiacUser cardiacUser =  ofy().load().type(CardiacUser.class).id(user.getUserId()).now();;//retrieve user from db
-        if (cardiacUser == null){
+        CardiacUser cardiacUser = ofy().load().type(CardiacUser.class).id(user.getEmail()).now();
+        ;//retrieve user from db
+        if (cardiacUser == null) {
             throw new UnauthorizedException("user is not registered");
         }
         return cardiacUser;

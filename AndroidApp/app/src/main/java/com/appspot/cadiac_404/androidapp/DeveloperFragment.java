@@ -18,12 +18,15 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
+import com.google.api.client.util.DateTime;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import cardiac_404.appspot.com.cardiacApi.model.ECGBean;
 import cardiac_404.appspot.com.cardiacApi.model.ECGBeanCollection;
 import cardiac_404.appspot.com.cardiacApi.CardiacApi;
+import cardiac_404.appspot.com.cardiacApi.model.TimeLocBean;
 
 /**
  * Created by Alan on 9/21/2015.
@@ -50,7 +53,7 @@ public class DeveloperFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CardiacApi.Builder endpointsBuilder = new CardiacApi.Builder(AndroidHttp.newCompatibleTransport(),
-                new AndroidJsonFactory(), null);
+                new AndroidJsonFactory(), MainActivity.credentials);
         endpointsBuilder.setRootUrl("https://cardiac-404.appspot.com/_ah/api/");
         endpointsBuilder.setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
             @Override
@@ -114,6 +117,11 @@ public class DeveloperFragment extends Fragment {
                     public void run() {
                         try {
                             ECGBean bean = new ECGBean();
+                            TimeLocBean timeBean= new TimeLocBean();
+                            timeBean.setTime(new DateTime(Calendar.getInstance().getTimeInMillis()));
+                            timeBean.setLatitude(45d);
+                            timeBean.setLongitude(60d);
+                            bean.setTime(new TimeLocBean());
                             bean.setHeartRate(100d);
                             bean.setMissedBeat(false);
                             bean.setLowVoltPeak(false);

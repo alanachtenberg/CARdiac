@@ -1,19 +1,13 @@
 package com.appspot.cardiac_404;
 
-import com.googlecode.objectify.annotation.Subclass;
-
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
-
-import javax.xml.crypto.Data;
 
 /**
  * Created by Alan on 10/30/2015.
  */
 
-@Subclass
 public class TimeLocBean implements Serializable{
     private Date time;
     private double latitude;
