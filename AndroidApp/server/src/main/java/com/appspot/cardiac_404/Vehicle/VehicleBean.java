@@ -49,6 +49,6 @@ public class VehicleBean {
 
     @Override
     public String toString(){
-        return String.format("%s Collision:%s Velocity:%d",time.toString(), collision, velocity);
+        return String.format("%s Collision:%b Velocity:%.3f",time.toString(), collision, velocity);
     }
 }

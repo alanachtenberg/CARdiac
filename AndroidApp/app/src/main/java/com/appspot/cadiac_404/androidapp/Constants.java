@@ -13,6 +13,7 @@ public class Constants {
 
   public static final String WEB_CLIENT_ID = "775668101465-m8jfmuet88enh2hofbiub68j83a8l007.apps.googleusercontent.com";
   public static final String ANDROID_CLIENT_ID = "775668101465-b2v598pj2i0q5olt6r3411vmmaarhlo5.apps.googleusercontent.com";
+  public static final String LAPTOP_ANDROID_CLIENT_ID = "775668101465-4h7e202vhjauo1b0agsrfun5osskkud9.apps.googleusercontent.com";
   public static final String ANDROID_AUDIENCE = WEB_CLIENT_ID;
   public static final String EMAIL_SCOPE = "https://www.googleapis.com/auth/userinfo.email";
 }

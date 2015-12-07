@@ -51,6 +51,6 @@ public class TimeLocBean implements Serializable{
 
     @Override
     public String toString(){
-        return String.format("Time:%s Latitude:%d Longitude:%d",time.toString(),latitude,longitude);
+        return String.format("Time:%s Latitude:%.3f Longitude:%.3f",time.toString(),latitude,longitude);
     }
 }

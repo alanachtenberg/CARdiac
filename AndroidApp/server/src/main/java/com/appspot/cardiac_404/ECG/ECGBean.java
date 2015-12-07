@@ -69,7 +69,7 @@ public class ECGBean implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s HeartRate:%d MissedBeat:%s LowVoltPeak:%s LowVoltValue: %d",
+        return String.format("%s HeartRate:%.3f MissedBeat:%b LowVoltPeak:%b LowVoltValue: %.3f",
                 time.toString(), heartRate, missedBeat, lowVoltPeak, lowVoltValue);
     }
 }

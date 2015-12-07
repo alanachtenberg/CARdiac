@@ -16,7 +16,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
         version = Constants.VERSION,
         namespace = @ApiNamespace(ownerDomain = Constants.DOMAIN, ownerName = Constants.DOMAIN,
                 packagePath = ""),
-        clientIds = {Constants.WEB_CLIENT_ID, Constants.API_EXPLORER_CLIENT_ID, Constants.ANDROID_CLIENT_ID, Constants.ANDROID_CLIENT_ID},
+        clientIds = {Constants.WEB_CLIENT_ID, Constants.API_EXPLORER_CLIENT_ID, Constants.ANDROID_CLIENT_ID, Constants.LAPTOP_ANDROID_CLIENT_ID},
         audiences = {Constants.ANDROID_AUDIENCE}
 )
 public abstract class CARdiacApiBase {
