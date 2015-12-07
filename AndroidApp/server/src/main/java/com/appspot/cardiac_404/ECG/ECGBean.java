@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Created by Alan on 10/6/2015.
  */
-public class ECGBean implements Serializable{
+public class ECGBean implements Serializable {
     private TimeLocBean time;
     private double heartRate;
     private boolean missedBeat;
@@ -19,7 +19,7 @@ public class ECGBean implements Serializable{
 
     }
 
-    public ECGBean( TimeLocBean time, double heartRate, boolean missedBeat, boolean lowVoltPeak, double lowVoltValue) {
+    public ECGBean(TimeLocBean time, double heartRate, boolean missedBeat, boolean lowVoltPeak, double lowVoltValue) {
         this.time = time;
         this.heartRate = heartRate;
         this.missedBeat = missedBeat;
@@ -65,5 +65,11 @@ public class ECGBean implements Serializable{
 
     public void setLowVoltValue(double lowVoltValue) {
         this.lowVoltValue = lowVoltValue;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s HeartRate:%d MissedBeat:%s LowVoltPeak:%s LowVoltValue: %d",
+                time.toString(), heartRate, missedBeat, lowVoltPeak, lowVoltValue);
     }
 }

@@ -1,6 +1,7 @@
 package com.appspot.cardiac_404.Vehicle;
 
 import com.appspot.cardiac_404.TimeLocBean;
+import com.google.appengine.repackaged.org.codehaus.jackson.map.util.JSONPObject;
 
 /**
  * Created by Alan on 10/31/2015.
@@ -44,5 +45,10 @@ public class VehicleBean {
 
     public void setTime(TimeLocBean time) {
         this.time = time;
+    }
+
+    @Override
+    public String toString(){
+        return String.format("%s Collision:%s Velocity:%d",time.toString(), collision, velocity);
     }
 }

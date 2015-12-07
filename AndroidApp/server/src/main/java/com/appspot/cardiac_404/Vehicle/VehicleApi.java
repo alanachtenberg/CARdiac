@@ -1,6 +1,7 @@
 package com.appspot.cardiac_404.Vehicle;
 
 import com.appspot.cardiac_404.CARdiacApiBase;
+import com.appspot.cardiac_404.MailService;
 import com.appspot.cardiac_404.TimeLocBean;
 import com.appspot.cardiac_404.User.CardiacUser;
 import com.google.api.server.spi.config.ApiMethod;
@@ -12,6 +13,8 @@ import com.googlecode.objectify.cmd.Query;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.ArrayList;
+
+import javax.mail.MessagingException;
 
 /**
  * Created by Alan on 10/30/2015.
@@ -30,6 +33,12 @@ public class VehicleApi extends CARdiacApiBase {
     public void insertVehicle(User user, VehicleBean data) throws UnauthorizedException {
         CardiacUser cardiacUser = loadUser(user);
         cardiacUser.getVehicleData().add(data);//insert vehicle data
+        try {
+            MailService.sendMail(user.getEmail(), "Alert!!!\n\n" + data.toString(), "CARdiac ALERT!");
+        }
+        catch (MessagingException e){
+            e.printStackTrace();
+        }
         saveCardiacUser(cardiacUser); //save user to db
     }
 

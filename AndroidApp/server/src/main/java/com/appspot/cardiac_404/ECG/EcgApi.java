@@ -1,6 +1,7 @@
 package com.appspot.cardiac_404.ECG;
 
 import com.appspot.cardiac_404.CARdiacApiBase;
+import com.appspot.cardiac_404.MailService;
 import com.appspot.cardiac_404.User.CardiacUser;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.response.NotFoundException;
@@ -9,6 +10,8 @@ import com.google.appengine.api.users.User;
 import com.googlecode.objectify.cmd.Query;
 
 import java.util.ArrayList;
+
+import javax.mail.MessagingException;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -22,6 +25,12 @@ public class EcgApi extends CARdiacApiBase {
     public void insertECG(User user, ECGBean data) throws UnauthorizedException {
         CardiacUser cardiacUser = loadUser(user);
         cardiacUser.getEcgData().add(data);//insert ecg data
+        try {
+            MailService.sendMail(user.getEmail(),"Alert!!!\n\n" + data.toString(),"CARdiac ALERT!");
+        }
+        catch (MessagingException e){
+            e.printStackTrace();
+        }
         saveCardiacUser(cardiacUser); //save user to db
     }
 
@@ -53,5 +62,7 @@ public class EcgApi extends CARdiacApiBase {
         cardiacUser.getEcgData().remove(ecgBean);
         saveCardiacUser(cardiacUser);//update user in db
     }
+
+
 
 }

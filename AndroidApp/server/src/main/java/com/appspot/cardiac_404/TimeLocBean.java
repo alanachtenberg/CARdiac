@@ -48,4 +48,9 @@ public class TimeLocBean implements Serializable{
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
+
+    @Override
+    public String toString(){
+        return String.format("Time:%s Latitude:%d Longitude:%d",time.toString(),latitude,longitude);
+    }
 }

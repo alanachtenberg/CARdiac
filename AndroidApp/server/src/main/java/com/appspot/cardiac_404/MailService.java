@@ -40,9 +40,5 @@ public class MailService {
         }catch(AddressException e){
             e.printStackTrace();
         }
-        catch (MessagingException e){
-            e.printStackTrace();
-            throw e;
-        }
     }
 }
