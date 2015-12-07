@@ -46,9 +46,13 @@ public class BtCommThread extends Thread {
         while (socket!=null && socket.isConnected()) {
             String receivedMessage;
             receivedMessage = read();
-            if(receivedMessage!=null)
+            if(receivedMessage!=null) {
                 callbacks.logMessage(receivedMessage);
-            callbacks.handleReceivedMessages(receivedMessage);
+                callbacks.handleReceivedMessages(receivedMessage);
+            }
+            else{
+                callbacks.logError("Recieved Null Message");
+            }
         }
     }
 
